@@ -20,7 +20,7 @@ export default function Navbar() {
   }, []);
   return (
     <nav className="flex items-center justify-between bg-gray-900 text-white px-6 py-3">
-      <div className="font-bold text-lg">LOGO</div>
+      <div className="font-bold text-lg">AsMedia</div>
 
       <ul className="flex gap-6">
         <li className="hover:text-yellow-400 cursor-pointer">Home</li>
