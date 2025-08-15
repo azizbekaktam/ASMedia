@@ -5,8 +5,8 @@ import Link from "next/link";
 export default function LoginPage() {
   const router = useRouter();
 
-  const [username, setUsername] = useState("mor_2314");
-  const [password, setPassword] = useState("83r5^_");
+  const [username, setUsername] = useState("");  //mor_2314
+  const [password, setPassword] = useState("");    //83r5^_
   const [error, setError] = useState(null);
 
   async function login(e) {
