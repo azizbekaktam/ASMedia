@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import Spinder from "./Spinder";
 
 export default function Slider() {
   const [movies, setMovies] = useState([]);
@@ -27,7 +28,12 @@ export default function Slider() {
     }
   };
 
-  if (!movies.length) return <p className="text-center mt-10">Loading...</p>;
+  if (!movies.length)
+    return (
+      <p className="text-center mt-10">
+        <Spinder />
+      </p>
+    );
 
   return (
     <div className="relative w-full h-[400px] overflow-hidden">

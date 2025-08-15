@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Link from "next/link";
+import Spinder from "./Spinder";
 
 export default function Search() {
   const [query, setQuery] = useState("");
@@ -53,7 +54,7 @@ export default function Search() {
       />
 
       {loading && query && (
-        <div className="absolute bg-white p-2 w-full shadow">Loading...</div>
+        <div className="absolute bg-white p-2 w-full shadow"><Spinder/></div>
       )}
 
       {results.length > 0 && query && (
