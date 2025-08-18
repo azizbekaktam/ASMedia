@@ -36,7 +36,7 @@ export default function MovieList() {
   };
 
   return (
-<div className="p-6 bg-gray-100 dark:bg-gray-900 min-h-screen transition-colors">
+<div className="p-6 bg-gray-100 dark:bg-white-900 min-h-screen transition-colors">
   {/* 🎬 Movies Grid */}
   <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-4 mb-6">
     {movies
