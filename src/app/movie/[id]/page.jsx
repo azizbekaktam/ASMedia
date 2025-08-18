@@ -41,37 +41,49 @@ export default function MovieDetail() {
   }
   const { poster_path, title, release_date, vote_average, overview } = movie;
   return (
-    <main className="bg-black text-white min-h-screen p-6">
-      <BackButton />
-      <div className="max-w-4xl mx-auto flex flex-col md:flex-row gap-6">
-        <img
-          src={`${process.env.NEXT_PUBLIC_Project_TmdApi_Api_Img}/t/p/w500${poster_path}`}
-          alt={title}
-          className="rounded-lg shadow-lg"
-        />
-        <div>
-          <h1 className="text-3xl font-bold">{title}</h1>
-          <p className="text-gray-400">{release_date}</p>
-          <p className="mt-4">{overview}</p>
-          <p className="mt-4 text-yellow-400 font-semibold">
-            Rating: {vote_average} / 10
-          </p>
-          {trailer && (
-            <div className="mt-6">
-              <h2 className="text-xl font-semibold mb-2">Trailer</h2>
-              <iframe
-                width="100%"
-                height="315"
-                src={`${process.env.NEXT_PUBLIC_Project_TmdApi_Api_Trailer}/embed/${trailer.key}`}
-                title="YouTube video player"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              ></iframe>
-            </div>
-          )}
+<main className="bg-gray-100 text-gray-900 dark:bg-black dark:text-white min-h-screen p-6 transition-colors">
+  {/* 🔙 Back Button */}
+  <BackButton />
+
+  {/* 🎥 Movie content */}
+  <div className="max-w-5xl mx-auto flex flex-col md:flex-row gap-8 mt-6">
+    {/* Poster */}
+    <img
+      src={`${process.env.NEXT_PUBLIC_Project_TmdApi_Api_Img}/t/p/w500${poster_path}`}
+      alt={title}
+      className="rounded-lg shadow-lg w-full md:w-[300px] object-cover"
+    />
+
+    {/* Movie Info */}
+    <div className="flex-1">
+      <h1 className="text-3xl font-bold">{title}</h1>
+      <p className="text-gray-600 dark:text-gray-400">{release_date}</p>
+
+      <p className="mt-4 leading-relaxed">{overview}</p>
+
+      <p className="mt-4 text-yellow-500 font-semibold">
+        ⭐ Rating: {vote_average} / 10
+      </p>
+
+      {/* Trailer */}
+      {trailer && (
+        <div className="mt-6">
+          <h2 className="text-xl font-semibold mb-2">🎬 Trailer</h2>
+          <div className="aspect-video rounded-lg overflow-hidden shadow-md">
+            <iframe
+              src={`${process.env.NEXT_PUBLIC_Project_TmdApi_Api_Trailer}/embed/${trailer.key}`}
+              title="YouTube video player"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              className="w-full h-full"
+            ></iframe>
+          </div>
         </div>
-      </div>
-    </main>
+      )}
+    </div>
+  </div>
+</main>
+
   );
 }

@@ -36,48 +36,55 @@ export default function MovieList() {
   };
 
   return (
-    <div className="p-6">
-      <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-4 mb-6">
-          {movies
-            .filter((movie) => !blockedIds.includes(movie.id)) // 🚫 Bloklanganlarni chiqarma
-            .map((movie) => (
-              <Link href={`/movie/${movie.id}`} key={movie.id}>
-                <div className="bg-gray-900 text-white rounded overflow-hidden cursor-pointer hover:scale-105 transition-transform">
-                  <img
-                    src={`${process.env.NEXT_PUBLIC_Project_TmdApi_Api_Img}${movie.poster_path}`}
-                    alt={movie.title}
-                    className="w-full"
-                  />
-              <div className="p-2">
-                <h3 className="text-sm font-bold truncate">{movie.title}</h3>
-                <p className="text-xs text-gray-400">{movie.release_date}</p>
-              </div>
+<div className="p-6 bg-gray-100 dark:bg-gray-900 min-h-screen transition-colors">
+  {/* 🎬 Movies Grid */}
+  <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-4 mb-6">
+    {movies
+      .filter((movie) => !blockedIds.includes(movie.id)) // 🚫 Bloklanganlarni chiqarma
+      .map((movie) => (
+        <Link href={`/movie/${movie.id}`} key={movie.id}>
+          <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden cursor-pointer hover:scale-105 transition-transform">
+            <img
+              src={`${process.env.NEXT_PUBLIC_Project_TmdApi_Api_Img}${movie.poster_path}`}
+              alt={movie.title}
+              className="w-full h-64 object-cover"
+            />
+            <div className="p-3">
+              <h3 className="text-sm font-bold truncate text-gray-900 dark:text-white">
+                {movie.title}
+              </h3>
+              <p className="text-xs text-gray-500 dark:text-gray-400">
+                {movie.release_date}
+              </p>
             </div>
-          </Link>
-        ))}
-      </div>
+          </div>
+        </Link>
+      ))}
+  </div>
 
-      <div className="flex justify-center items-center gap-4">
-        <button
-          onClick={() => changePage(Math.max(pageFromUrl - 1, 1))}
-          disabled={pageFromUrl === 1}
-          className="px-4 py-2 bg-gray-700 text-white rounded disabled:opacity-50"
-        >
-          Prev
-        </button>
+  {/* 📄 Pagination */}
+  <div className="flex justify-center items-center gap-4">
+    <button
+      onClick={() => changePage(Math.max(pageFromUrl - 1, 1))}
+      disabled={pageFromUrl === 1}
+      className="px-4 py-2 rounded bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600 disabled:opacity-50 transition-colors"
+    >
+      Prev
+    </button>
 
-        <span className="text-black">
-          Page {pageFromUrl} / {totalPages}
-        </span>
+    <span className="text-gray-900 dark:text-gray-200 font-medium">
+      Page {pageFromUrl} / {totalPages}
+    </span>
 
-        <button
-          onClick={() => changePage(Math.min(pageFromUrl + 1, totalPages))}
-          disabled={pageFromUrl === totalPages}
-          className="px-4 py-2 bg-gray-700 text-white rounded disabled:opacity-50"
-        >
-          Next
-        </button>
-      </div>
-    </div>
+    <button
+      onClick={() => changePage(Math.min(pageFromUrl + 1, totalPages))}
+      disabled={pageFromUrl === totalPages}
+      className="px-4 py-2 rounded bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600 disabled:opacity-50 transition-colors"
+    >
+      Next
+    </button>
+  </div>
+</div>
+
   );
 }

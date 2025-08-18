@@ -16,11 +16,15 @@ export default function BackButton() {
   };
 
   return (
-    <button
-      onClick={handleBack}
-      className="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600 transition"
-    >
-      ⬅ Orqaga
-    </button>
+   <button
+  onClick={handleBack}
+  className="px-4 py-2 rounded font-medium 
+             bg-gray-200 text-gray-800 hover:bg-gray-300 
+             dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600 
+             transition-colors flex items-center gap-2"
+>
+  ⬅ Orqaga
+</button>
+
   );
 }

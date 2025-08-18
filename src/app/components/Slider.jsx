@@ -36,38 +36,50 @@ export default function Slider() {
     );
 
   return (
-    <div className="relative w-full h-[400px] overflow-hidden">
-      <img
-        src={`${process.env.NEXT_PUBLIC_Project_TmdApi_Api_SliderImg}/t/p/original${movies[current].backdrop_path}`}
-        alt={movies[current].title}
-        className="w-full h-full object-cover transition-all duration-500"
-      />
+<div className="relative w-full h-[400px] overflow-hidden rounded-lg shadow-md">
+  {/* 🎥 Slide image */}
+  <img
+    src={`${process.env.NEXT_PUBLIC_Project_TmdApi_Api_SliderImg}/t/p/original${movies[current].backdrop_path}`}
+    alt={movies[current].title}
+    className="w-full h-full object-cover transition-all duration-500"
+  />
 
-      <button
-        onClick={prevSlide}
-        className="absolute top-1/2 left-5 -translate-y-1/2 bg-black/50 text-white px-3 py-1 rounded"
-      >
-        ◀
-      </button>
+  {/* ◀ Prev button */}
+  <button
+    onClick={prevSlide}
+    className="absolute top-1/2 left-5 -translate-y-1/2 
+               bg-black/40 hover:bg-black/60 
+               text-white px-3 py-1 rounded-full 
+               backdrop-blur-sm transition-colors"
+  >
+    ◀
+  </button>
 
-      <button
-        onClick={nextSlide}
-        className="absolute top-1/2 right-5 -translate-y-1/2 bg-black/50 text-white px-3 py-1 rounded"
-      >
-        ▶
-      </button>
+  {/* ▶ Next button */}
+  <button
+    onClick={nextSlide}
+    className="absolute top-1/2 right-5 -translate-y-1/2 
+               bg-black/40 hover:bg-black/60 
+               text-white px-3 py-1 rounded-full 
+               backdrop-blur-sm transition-colors"
+  >
+    ▶
+  </button>
 
-      {/* Slayd indikatorlari — hammasini ko'rsatish */}
-      <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-2">
-        {movies.map((_, i) => (
-          <div
-            key={i}
-            className={`w-3 h-3 rounded-full ${
-              i === current ? "bg-white" : "bg-gray-500"
-            }`}
-          ></div>
-        ))}
-      </div>
-    </div>
+  {/* 🔘 Indicators */}
+  <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-2">
+    {movies.map((_, i) => (
+      <div
+        key={i}
+        className={`w-3 h-3 rounded-full transition-colors ${
+          i === current
+            ? "bg-yellow-400 shadow-lg"
+            : "bg-gray-300 dark:bg-gray-600"
+        }`}
+      ></div>
+    ))}
+  </div>
+</div>
+
   );
 }
