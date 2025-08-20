@@ -37,12 +37,10 @@ export default function MovieList() {
 
   return (
 <div className="p-6 bg-gray-900 dark:bg-white min-h-screen transition-colors">
-
-  {/* 🎬 Normal Movies Grid */}
-  <h2 className="text-xl font-bold mb-4 text-white">Movies</h2>
+  {/* 🎬 Movies Grid */}
   <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-4 mb-6">
     {movies
-      .filter((movie) => !blockedIds.includes(movie.id)) // 🚫 Block bo‘lmaganlar
+      .filter((movie) => !blockedIds.includes(movie.id)) // 🚫 Bloklanganlarni chiqarma
       .map((movie) => (
         <Link href={`/movie/${movie.id}`} key={movie.id}>
           <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden cursor-pointer hover:scale-105 transition-transform">
@@ -61,32 +59,6 @@ export default function MovieList() {
             </div>
           </div>
         </Link>
-      ))}
-  </div>
-
-  {/* 🚫 Blocked Movies Grid */}
-  <h2 className="text-xl font-bold mb-4 text-red-500">Blocked Movies</h2>
-  <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-4 mb-6">
-    {movies
-      .filter((movie) => blockedIds.includes(movie.id)) // ✅ faqat block bo‘lganlar
-      .map((movie) => (
-        <div
-          key={movie.id}
-          className="bg-gray-700 shadow-md rounded-lg overflow-hidden opacity-60 cursor-not-allowed"
-        >
-          <img
-            src={`${process.env.NEXT_PUBLIC_Project_TmdApi_Api_Img}${movie.poster_path}`}
-            alt={movie.title}
-            className="w-full h-64 object-cover"
-          />
-          <div className="p-3">
-            <h3 className="text-sm font-bold truncate text-gray-300">
-              {movie.title}
-            </h3>
-            <p className="text-xs text-gray-400">{movie.release_date}</p>
-            <span className="text-xs text-red-400 font-semibold">BLOCKED</span>
-          </div>
-        </div>
       ))}
   </div>
 
