@@ -25,7 +25,7 @@ export default function Movies() {
   }
 
   return (
-    <main>
+    <main className=' bg-gray-900 dark:bg-white'>
      <Navbar/>
       <Slider />
       <MovieList />

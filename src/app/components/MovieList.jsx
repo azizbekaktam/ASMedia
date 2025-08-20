@@ -37,7 +37,6 @@ export default function MovieList() {
 
   return (
 <div className="p-6 bg-gray-900 dark:bg-white min-h-screen transition-colors">
-  {/* 🎬 Movies Grid */}
   <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-4 mb-6">
     {movies
       .filter((movie) => !blockedIds.includes(movie.id)) // 🚫 Bloklanganlarni chiqarma
@@ -62,7 +61,6 @@ export default function MovieList() {
       ))}
   </div>
 
-  {/* 📄 Pagination */}
   <div className="flex justify-center items-center gap-4">
     <button
       onClick={() => changePage(Math.max(pageFromUrl - 1, 1))}
