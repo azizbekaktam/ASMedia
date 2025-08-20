@@ -47,7 +47,7 @@ export default function MovieDetail() {
   return (
     <main className="bg-gray-100 text-gray-900 dark:bg-black dark:text-gray-200 min-h-screen p-6 transition-colors">
       <BackButton />
-
+ 
       <div className="max-w-5xl mx-auto flex flex-col md:flex-row gap-8 mt-6">
         <img
           src={
