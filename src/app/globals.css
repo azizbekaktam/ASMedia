@@ -1,11 +1,16 @@
 @import "tailwindcss";
 
 
+/* loader */
+/* body{ background: #1e1e1e; display: flex ; justify-content: center; align-items: center; height: 90vh; } */
 
 body {
-  @apply bg-white text-black dark:bg-gray-900 dark:text-white;
+  @apply bg-white text-black;
 }
 
+.dark body {
+  @apply bg-black text-white;
+}
 
 .loader, .loader:before, .loader:after {
   border-radius: 50%;
