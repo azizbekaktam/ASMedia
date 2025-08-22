@@ -33,7 +33,7 @@ const {id, poster_path, title, release_date } =cartoons
         {cartoons.map((cartoon) => (
           <Link
             key={id}
-            href={`/cartoons/${id}`}
+            href={`/Cartoon/${id}`}
             className="bg-white dark:bg-gray-900 rounded-lg shadow-lg overflow-hidden hover:scale-105 transform transition duration-300"
           >
             <img
