@@ -6,7 +6,7 @@ import BackButton from "@/components/BackButton";
 export default function CartoonDetail() {
   const { id } = useParams();
   const [cartoon, setCartoon] = useState([]);
-  const [trailerKey, setTrailerKey] = useState([]);
+  const [trailerKey, setTrailerKey] = useState(null);
 
   useEffect(() => {
     async function fetchCartoon() {
@@ -24,7 +24,7 @@ export default function CartoonDetail() {
     async function fetchTrailer() {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_Project_TmdApi_Api}/movie/${id}/videos?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=en-US`
+          `${process.env.NEXT_PUBLIC_Project_TmdApi_Api}/movie/${id}/videos?api_key=${process.env.NEXT_PUBLIC_Project_TmdApi_Api_Key}&language=en-US`
         );
         const data = await res.json();
         const trailer = data.results.find(
