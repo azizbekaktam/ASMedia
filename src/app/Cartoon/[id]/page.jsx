@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import BackButton from "@/components/BackButton";
+import BackButton from "@/app/components/BackButton";
 
 export default function CartoonDetail() {
   const { id } = useParams();
