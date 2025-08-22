@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import BackButton from "@/app/components/BackButton";
+import Spinder from "@/app/components/Spinder";
 
 export default function CartoonDetail() {
   const { id } = useParams();
@@ -42,29 +43,28 @@ export default function CartoonDetail() {
     }
   }, [id]);
 
-  if (!cartoon) return <p className="text-center mt-10">⏳ Yuklanmoqda...</p>;
-const {poster_path, title, release_date, overview, vote_average} = cartoon
+  if (!cartoon) return <p className="text-center mt-10"><Spinder/></p>;
   return (
     <main className="bg-gray-100 text-gray-900 dark:bg-black dark:text-white min-h-screen p-6 transition-colors">
       <BackButton />
 
       <div className="max-w-5xl mx-auto flex flex-col md:flex-row gap-8 mt-6">
         <img
-          src={`${process.env.NEXT_PUBLIC_Project_TmdApi_Api_Img}/t/p/w500${poster_path}`}
-          alt={title}
+          src={`${process.env.NEXT_PUBLIC_Project_TmdApi_Api_Img}/t/p/w500${cartoon.poster_path}`}
+          alt={cartoon.title}
           className="rounded-lg shadow-lg w-full md:w-[300px] object-cover"
         />
 
         <div className="flex-1">
-          <h1 className="text-3xl font-bold">{title}</h1>
+          <h1 className="text-3xl font-bold">{cartoon.title}</h1>
           <p className="text-gray-600 dark:text-gray-400">
-            {release_date}
+            {cartoon.release_date}
           </p>
 
-          <p className="mt-4 leading-relaxed">{overview}</p>
+          <p className="mt-4 leading-relaxed">{cartoon.overview}</p>
 
           <p className="mt-4 text-yellow-500 font-semibold">
-            ⭐ Rating: {vote_average} / 10
+            ⭐ Rating: {cartoon.vote_average} / 10
           </p>
 
           {trailerKey && (

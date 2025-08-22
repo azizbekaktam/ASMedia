@@ -7,8 +7,8 @@ import CartoonSlider from "../components/CartoonSlider";
 export default function CartoonsPage() {
   const [cartoons, setCartoons] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [page, setPage] = useState(1); // 🌟 Hozirgi sahifa
-  const [totalPages, setTotalPages] = useState(1); // 🌟 Umumiy sahifalar
+  const [page, setPage] = useState(1); 
+  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
     async function fetchCartoons() {
@@ -19,7 +19,7 @@ export default function CartoonsPage() {
         );
         const data = await res.json();
         setCartoons(data.results || []);
-        setTotalPages(data.total_pages || 1); // 🌟 umumiy sahifalar soni
+        setTotalPages(data.total_pages || 1); 
         setLoading(false);
       } catch (error) {
         console.error("Error fetching cartoons:", error);
@@ -27,7 +27,7 @@ export default function CartoonsPage() {
       }
     }
     fetchCartoons();
-  }, [page]); // sahifa o‘zgarganda qaytadan fetch
+  }, [page]);
 
   if (loading) return <p className="text-center mt-10">⏳ Yuklanmoqda..</p>;
 
@@ -36,7 +36,6 @@ export default function CartoonsPage() {
       <Navbar />
       <CartoonSlider />
 
-      {/* 🌟 Sahifa soni tepada */}
       <h1 className="text-2xl font-bold text-center mb-6">
         🎬 Multfilmlar (Sahifa {page}/{totalPages})
       </h1>
@@ -65,7 +64,6 @@ export default function CartoonsPage() {
         ))}
       </div>
 
-      {/* 🌟 Pagination tugmalari */}
       <div className="flex justify-center items-center gap-4 mt-8">
         <button
           onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
