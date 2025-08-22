@@ -13,7 +13,7 @@ export default function CartoonDetail() {
     async function fetchCartoon() {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_Project_TmdApi_Api}/movie/${id}?api_key=${process.env.NEXT_PUBLIC_Project_TmdApi_Api}&language=en-US`
+          `${process.env.NEXT_PUBLIC_Project_TmdApi_Api}/movie/${id}?api_key=${process.env.NEXT_PUBLIC_Project_TmdApi_Api_Key}&language=en-US`
         );
         const data = await res.json();
         setCartoon(data);
@@ -45,7 +45,7 @@ export default function CartoonDetail() {
 
   if (!cartoon) return <p className="text-center mt-10"><Spinder/></p>;
   return (
-    <main className="bg-gray-100 text-gray-900 dark:bg-black dark:text-white min-h-screen p-6 transition-colors">
+    <main className="bg-white text-white dark:bg-black dark:text-black min-h-screen p-6 transition-colors">
       <BackButton />
 
       <div className="max-w-5xl mx-auto flex flex-col md:flex-row gap-8 mt-6">

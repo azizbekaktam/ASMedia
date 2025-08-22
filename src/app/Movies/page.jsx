@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import Spinder from '../components/Spinder';
 import Navbar from "../components/Navbar";
 import Slider from "../components/Slider";
-import MovieList from "../components/MovieList";
+import MovieList from "../movie/MovieList";
 
 export default function Movies() {
   const router = useRouter();
