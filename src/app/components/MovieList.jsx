@@ -58,6 +58,7 @@ export default function MovieList() {
             </div>
           </div>
         </Link>
+        
       ))}
   </div>
 
