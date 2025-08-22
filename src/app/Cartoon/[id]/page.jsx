@@ -12,7 +12,7 @@ export default function CartoonDetail() {
     async function fetchCartoon() {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_Project_TmdApi_Api}/movie/${id}?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=en-US`
+          `${process.env.NEXT_PUBLIC_Project_TmdApi_Api}/movie/${id}?api_key=${process.env.NEXT_PUBLIC_Project_TmdApi_Api}&language=en-US`
         );
         const data = await res.json();
         setCartoon(data);
