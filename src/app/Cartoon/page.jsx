@@ -23,7 +23,7 @@ export default function CartoonsPage() {
     fetchCartoons();
   }, []);
 
-  if (loading) return <p className="text-center mt-10">⏳ Yuklanmoqda...</p>;
+  if (loading) return <p className="text-center mt-10">⏳ Yuklanmoqda..</p>;
 const {id, poster_path, title, release_date } =cartoons 
   return (
     <main className="bg-gray-100 dark:bg-black min-h-screen p-6 transition-colors">
