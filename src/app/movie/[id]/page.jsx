@@ -42,19 +42,15 @@ export default function MovieDetail() {
   const { poster_path, title, release_date, vote_average, overview } = movie;
   return (
 <main className="bg-gray-100 text-gray-900 dark:bg-black dark:text-white min-h-screen p-6 transition-colors">
-  {/* 🔙 Back Button */}
   <BackButton />
 
-  {/* 🎥 Movie content */}
   <div className="max-w-5xl mx-auto flex flex-col md:flex-row gap-8 mt-6">
-    {/* Poster */}
     <img
       src={`${process.env.NEXT_PUBLIC_Project_TmdApi_Api_Img}/t/p/w500${poster_path}`}
       alt={title}
       className="rounded-lg shadow-lg w-full md:w-[300px] object-cover"
     />
 
-    {/* Movie Info */}
     <div className="flex-1">
       <h1 className="text-3xl font-bold">{title}</h1>
       <p className="text-gray-600 dark:text-gray-400">{release_date}</p>
