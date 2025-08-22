@@ -23,7 +23,10 @@ export default function Navbar() {
   <div className="font-bold text-lg tracking-wide">AsMedia</div>
 
   <ul className="flex gap-6 font-medium">
+   
+   <Link href={`Movies`}>
     <li className="cursor-pointer hover:text-yellow-500 dark:hover:text-yellow-400 transition-colors">Home</li>
+   </Link>
     <li className="cursor-pointer hover:text-yellow-500 dark:hover:text-yellow-400 transition-colors">Movies</li>
  <Link href={`/Cartoon`}>
     <li className="cursor-pointer hover:text-yellow-500 dark:hover:text-yellow-400 transition-colors">Cinema</li>

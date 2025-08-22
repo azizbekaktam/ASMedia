@@ -39,7 +39,7 @@ export default function MovieList() {
 <div className="p-6 bg-white dark:bg-gray-900 min-h-screen transition-colors">
   <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-4 mb-6">
     {movies
-      .filter((movie) => !blockedIds.includes(movie.id)) // 🚫 Bloklanganlarni chiqarma
+      .filter((movie) => !blockedIds.includes(movie.id)) 
       .map((movie) => (
         <Link href={`/movie/${movie.id}`} key={movie.id}>
           <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden cursor-pointer hover:scale-105 transition-transform">
