@@ -32,57 +32,70 @@ export default function CartoonsPage() {
   if (loading) return <p className="text-center mt-10">⏳ Yuklanmoqda..</p>;
 
   return (
-    <main className="bg-gray-100 dark:bg-black min-h-screen p-6 transition-colors">
-      <Navbar />
-      <CartoonSlider />
+  <main className="bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-black min-h-screen p-6 transition-colors">
+  <Navbar />
+  <CartoonSlider />
 
-      <h1 className="text-2xl font-bold text-center mb-6">
-        🎬 Multfilmlar (Sahifa {page}/{totalPages})
-      </h1>
+  <h1 className="text-3xl font-extrabold text-center mb-10 text-gray-900 dark:text-white tracking-tight">
+    🎬 Multfilmlar <span className="text-blue-600">({page}/{totalPages})</span>
+  </h1>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
-        {cartoons.map((cartoon) => (
-          <Link
-            key={cartoon.id}
-            href={`/Cartoon/${cartoon.id}`}
-            className="bg-white dark:bg-gray-900 rounded-lg shadow-lg overflow-hidden hover:scale-105 transform transition duration-300"
-          >
-            <img
-              src={`${process.env.NEXT_PUBLIC_Project_TmdApi_Api_Img}/t/p/w500${cartoon.poster_path}`}
-              alt={cartoon.title}
-              className="w-full h-64 object-cover"
-            />
-            <div className="p-3">
-              <h2 className="text-lg font-semibold truncate">
-                {cartoon.title}
-              </h2>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                📅 {cartoon.release_date}
-              </p>
-            </div>
-          </Link>
-        ))}
-      </div>
+  {/* Cards Grid */}
+  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
+    {cartoons.map((cartoon) => (
+      <Link
+        key={cartoon.id}
+        href={`/Cartoon/${cartoon.id}`}
+        className="group bg-white dark:bg-gray-900 rounded-2xl shadow-md overflow-hidden 
+                   hover:shadow-2xl transition duration-300 transform hover:-translate-y-2"
+      >
+        <div className="relative">
+          <img
+            src={`${process.env.NEXT_PUBLIC_Project_TmdApi_Api_Img}/t/p/w500${cartoon.poster_path}`}
+            alt={cartoon.title}
+            className="w-full h-72 object-cover group-hover:scale-105 transition-transform duration-300"
+          />
+          {/* Overlay rating */}
+          <span className="absolute top-3 right-3 bg-yellow-500 text-white text-sm font-bold px-2 py-1 rounded-lg shadow">
+            ⭐ {cartoon.vote_average?.toFixed(1) || "N/A"}
+          </span>
+        </div>
 
-      <div className="flex justify-center items-center gap-4 mt-8">
-        <button
-          onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-          disabled={page === 1}
-          className="px-4 py-2 bg-gray-300 dark:bg-gray-700 rounded-lg disabled:opacity-50"
-        >
-          ◀ Oldingi
-        </button>
-        <span className="text-lg font-medium">
-          Sahifa {page} / {totalPages}
-        </span>
-        <button
-          onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
-          disabled={page === totalPages}
-          className="px-4 py-2 bg-gray-300 dark:bg-gray-700 rounded-lg disabled:opacity-50"
-        >
-          Keyingi ▶
-        </button>
-      </div>
-    </main>
+        <div className="p-4">
+          <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200 truncate group-hover:text-blue-600 transition">
+            {cartoon.title}
+          </h2>
+          <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+            📅 {cartoon.release_date}
+          </p>
+        </div>
+      </Link>
+    ))}
+  </div>
+
+  {/* Pagination */}
+  <div className="flex justify-center items-center gap-6 mt-12">
+    <button
+      onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+      disabled={page === 1}
+      className="px-5 py-2 rounded-xl font-medium bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 
+                 hover:bg-gray-300 dark:hover:bg-gray-600 disabled:opacity-40 transition"
+    >
+      ◀ Oldingi
+    </button>
+    <span className="text-lg font-semibold text-gray-800 dark:text-gray-200">
+      Sahifa {page} / {totalPages}
+    </span>
+    <button
+      onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
+      disabled={page === totalPages}
+      className="px-5 py-2 rounded-xl font-medium bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 
+                 hover:bg-gray-300 dark:hover:bg-gray-600 disabled:opacity-40 transition"
+    >
+      Keyingi ▶
+    </button>
+  </div>
+</main>
+
   );
 }

@@ -2,13 +2,13 @@
 
 
 
-body {
+/* body {
   @apply bg-white text-black;
 }
 
 .dark body {
-  @apply bg-black text-white;
-}
+  @apply bg-black text-red;
+} */
 
 .loader, .loader:before, .loader:after {
   border-radius: 50%;

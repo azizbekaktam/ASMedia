@@ -45,45 +45,60 @@ export default function CartoonDetail() {
 
   if (!cartoon) return <p className="text-center mt-10"><Spinder/></p>;
   return (
-    <main className="bg-white text-white dark:bg-black dark:text-black min-h-screen p-6 transition-colors">
-      <BackButton />
+<main className="bg-gradient-to-b from-gray-50 to-white min-h-screen p-8">
+  <BackButton />
 
-      <div className="max-w-5xl mx-auto flex flex-col md:flex-row gap-8 mt-6">
-        <img
-          src={`${process.env.NEXT_PUBLIC_Project_TmdApi_Api_Img}/t/p/w500${cartoon.poster_path}`}
-          alt={cartoon.title}
-          className="rounded-lg shadow-lg w-full md:w-[300px] object-cover"
-        />
+  <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-10 mt-10">
+    {/* Poster */}
+    <div className="flex-shrink-0">
+      <img
+        src={`${process.env.NEXT_PUBLIC_Project_TmdApi_Api_Img}/t/p/w500${cartoon.poster_path}`}
+        alt={cartoon.title}
+        className="rounded-2xl shadow-xl w-full md:w-[320px] object-cover transition-transform duration-300 hover:scale-105"
+      />
+    </div>
 
-        <div className="flex-1">
-          <h1 className="text-3xl font-bold">{cartoon.title}</h1>
-          <p className="text-gray-600 dark:text-gray-400">
-            {cartoon.release_date}
-          </p>
+    {/* Info */}
+    <div className="flex-1">
+      <h1 className="text-4xl font-extrabold text-gray-900 tracking-tight">
+        {cartoon.title}
+      </h1>
+      <p className="text-lg text-gray-500 mt-1">
+        {cartoon.release_date}
+      </p>
 
-          <p className="mt-4 leading-relaxed">{cartoon.overview}</p>
+      <p className="mt-6 text-gray-700 leading-relaxed text-lg">
+        {cartoon.overview}
+      </p>
 
-          <p className="mt-4 text-yellow-500 font-semibold">
-            ⭐ Rating: {cartoon.vote_average} / 10
-          </p>
-
-          {trailerKey && (
-            <div className="mt-6">
-              <h2 className="text-xl font-semibold mb-2">🎬 Trailer</h2>
-              <div className="aspect-video rounded-lg overflow-hidden shadow-md">
-                <iframe
-                  src={`${process.env.NEXT_PUBLIC_Project_TmdApi_Api_Trailer}/embed/${trailerKey}`}
-                  title="YouTube video player"
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                  className="w-full h-full"
-                ></iframe>
-              </div>
-            </div>
-          )}
-        </div>
+      <div className="mt-6 flex items-center gap-2">
+        <span className="text-yellow-500 text-2xl">⭐</span>
+        <span className="text-lg font-semibold text-gray-800">
+          {cartoon.vote_average} / 10
+        </span>
       </div>
-    </main>
+
+      {/* Trailer */}
+      {trailerKey && (
+        <div className="mt-10">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+            🎬 Trailer
+          </h2>
+          <div className="aspect-video rounded-xl overflow-hidden shadow-lg border border-gray-200">
+            <iframe
+              src={`${process.env.NEXT_PUBLIC_Project_TmdApi_Api_Trailer}/embed/${trailerKey}`}
+              title="YouTube video player"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              className="w-full h-full"
+            ></iframe>
+          </div>
+        </div>
+      )}
+    </div>
+  </div>
+</main>
+
   );
 }
