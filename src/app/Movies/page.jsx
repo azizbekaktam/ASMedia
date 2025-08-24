@@ -10,7 +10,8 @@ import Spinder from "../components/Spinder";
 export default function Movies() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const pageFromUrl = parseInt(searchParams.get("page")) || 1;
+
+  const pageFromUrl = Number(searchParams.get("page")) || 1;
 
   const [movies, setMovies] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
@@ -21,26 +22,14 @@ export default function Movies() {
     if (!token) {
       router.push("/");
     }
-    setLoading(false); 
+    setLoading(false);
   }, [router]);
 
   if (loading) {
     return <Spinder />;
   }
 
-  const blockedIds = [
-    1280461, 715287, 611251, 259872, 1211373, 993234, 1040159, 460229,
-    1476292, 829557, 82023, 226674, 1234720, 968171, 1357459, 592695,
-    19173, 537915, 707610, 173705, 694943, 173185, 1414272, 994682,
-    337167, 22705, 2105, 1145645, 387824, 1264854, 1135869, 231164,
-    269955, 1055110, 233651, 800409, 469877, 79871, 1337395, 437542,
-    587727, 939099, 744275, 105825, 913259, 286687, 297090, 43947,
-    481871, 55580, 1173558, 936621, 440617, 249397, 50270, 377,
-    351523, 345, 464026, 18190, 339846, 123338, 276126, 85430,
-    1302004, 974573, 484133, 8275, 27098, 1135850, 86331, 1337411,
-    689160, 1018, 48650, 11013, 390845, 115290, 10591, 302945, 423502,
-    253350,
-  ];
+  const blockedIds = [1280461, 715287, 611251, 259872, 1211373];
 
   useEffect(() => {
     axios
