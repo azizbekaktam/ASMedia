@@ -11,7 +11,7 @@
 } */
 
 .loader, .loader:before, .loader:after {
-  border-radius: 50%;
+  border-radius: 51%;
   width: 2.5em;
   height: 2.5em;
   animation-fill-mode: both;
