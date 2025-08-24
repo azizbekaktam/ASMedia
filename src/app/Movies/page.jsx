@@ -16,20 +16,18 @@ export default function Movies() {
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
 
-  // Auth tekshirish
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
       router.push("/");
     }
-    setLoading(false); // har doim tugashi kerak
+    setLoading(false); 
   }, [router]);
 
   if (loading) {
     return <Spinder />;
   }
 
-  // Bloklangan ID'lar
   const blockedIds = [
     1280461, 715287, 611251, 259872, 1211373, 993234, 1040159, 460229,
     1476292, 829557, 82023, 226674, 1234720, 968171, 1357459, 592695,
@@ -44,7 +42,6 @@ export default function Movies() {
     253350,
   ];
 
-  // API fetch
   useEffect(() => {
     axios
       .get(
@@ -66,12 +63,11 @@ export default function Movies() {
       <Navbar />
       <Slider />
 
-      {/* Movies Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-6 mb-8">
         {movies
           .filter((movie) => !blockedIds.includes(movie.id))
           .map((movie) => (
-            <Link href={`/movie/${movie.id}`} key={movie.id}>
+            <Link href={`/Movies/${movie.id}`} key={movie.id}>
               <div className="bg-white dark:bg-gray-800 shadow-md rounded-xl overflow-hidden cursor-pointer hover:shadow-lg hover:scale-105 transition-transform duration-300">
                 <img
                   src={`${process.env.NEXT_PUBLIC_Project_TmdApi_Api_Img}${movie.poster_path}`}
@@ -91,7 +87,6 @@ export default function Movies() {
           ))}
       </div>
 
-      {/* Pagination */}
       <div className="flex justify-center items-center gap-6">
         <button
           onClick={() => changePage(Math.max(pageFromUrl - 1, 1))}
