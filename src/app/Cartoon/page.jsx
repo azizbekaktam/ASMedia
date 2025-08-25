@@ -1,11 +1,14 @@
 "use client";
+
 import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Navbar from "../components/Navbar";
 import CartoonSlider from "../components/CartoonSlider";
 
-export default function CartoonsPage({ params }) {
-  const currentPage = Number(params.page) || 1;
+export default function CartoonsPage() {
+  const searchParams = useSearchParams();
+  const currentPage = Number(searchParams.get("page")) || 1;
 
   const [cartoons, setCartoons] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -21,9 +24,9 @@ export default function CartoonsPage({ params }) {
         const data = await res.json();
         setCartoons(data.results || []);
         setTotalPages(data.total_pages || 1);
-        setLoading(false);
       } catch (error) {
         console.error("Error fetching cartoons:", error);
+      } finally {
         setLoading(false);
       }
     }
@@ -38,7 +41,10 @@ export default function CartoonsPage({ params }) {
       <CartoonSlider />
 
       <h1 className="text-3xl font-extrabold text-center mb-10 text-gray-900 dark:text-white">
-        🎬 Multfilmlar <span className="text-blue-600">({currentPage}/{totalPages})</span>
+        🎬 Multfilmlar{" "}
+        <span className="text-blue-600">
+          ({currentPage}/{totalPages})
+        </span>
       </h1>
 
       {/* Cards Grid */}
@@ -75,7 +81,7 @@ export default function CartoonsPage({ params }) {
       {/* Pagination */}
       <div className="flex justify-center items-center gap-6 mt-12">
         <Link
-          href={`/Cartoons/${Math.max(currentPage - 1, 1)}`}
+          href={`/Cartoons?page=${Math.max(currentPage - 1, 1)}`}
           className={`px-5 py-2 rounded-xl font-medium ${
             currentPage === 1
               ? "opacity-40 cursor-not-allowed bg-gray-300"
@@ -90,7 +96,7 @@ export default function CartoonsPage({ params }) {
         </span>
 
         <Link
-          href={`/Cartoons/${Math.min(currentPage + 1, totalPages)}`}
+          href={`/Cartoons?page=${Math.min(currentPage + 1, totalPages)}`}
           className={`px-5 py-2 rounded-xl font-medium ${
             currentPage === totalPages
               ? "opacity-40 cursor-not-allowed bg-gray-300"
