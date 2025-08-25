@@ -1,8 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import Navbar from "../../components/Navbar";
-import CartoonSlider from "../../components/CartoonSlider";
+import Navbar from "../components/Navbar";
+import CartoonSlider from "../components/CartoonSlider";
 
 export default function CartoonsPage({ params }) {
   const currentPage = Number(params.page) || 1;
