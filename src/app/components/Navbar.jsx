@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import Search from "./Search";
 import LogOut from "./LogOut";
-import DarkMode from "./DarkMode";
 import Link from "next/link";
 
 export default function Navbar() {
