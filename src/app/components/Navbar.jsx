@@ -28,7 +28,7 @@ export default function Navbar() {
     <li className="cursor-pointer hover:text-yellow-500 dark:hover:text-yellow-400 transition-colors">Home</li>
    </Link>
     <li className="cursor-pointer hover:text-yellow-500 dark:hover:text-yellow-400 transition-colors">Movies</li>
- <Link href={`/Cartoon`}>
+ <Link href={`/Cartoon?page=1`}>
     <li className="cursor-pointer hover:text-yellow-500 dark:hover:text-yellow-400 transition-colors">Cinema</li>
    </Link>
   </ul>
@@ -36,7 +36,6 @@ export default function Navbar() {
   <div className="flex items-center gap-3">
     <Search />
 <div>
-  <DarkMode/>
 </div>
     <div className="w-8 h-8 rounded-full bg-yellow-500 flex items-center justify-center text-black font-bold text-sm">
       {username ? username[0].toUpperCase() : "?"}

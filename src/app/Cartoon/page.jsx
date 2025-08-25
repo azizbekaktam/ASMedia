@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import Navbar from "../components/Navbar";
 import CartoonSlider from "../components/CartoonSlider";
+import Spinder from "../components/Spinder";
 
 
 export default function CartoonsPage() {
@@ -34,10 +35,10 @@ export default function CartoonsPage() {
     fetchCartoons();
   }, [currentPage]);
 
-  if (loading) return <p className="text-center mt-10">⏳ Yuklanmoqda..</p>;
+  if (loading) return <p className="text-center mt-10"><Spinder/></p>;
 
   return (
-    <main className="p-6">
+    <main className="p-6 bg-white dark:bg-gray-900 min-h-screen transition-colors">
       <Navbar />
       <CartoonSlider />
 
