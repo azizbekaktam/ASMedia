@@ -11,9 +11,7 @@ export default function Movies() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  // URL-dan page ni olish (?page=2 kabi)
-  const pageFromUrl = Number(searchParams.get("page")) || 1;
-
+  const [pageFromUrl, setPageFromUrl] = useState(1);
   const [movies, setMovies] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
@@ -22,20 +20,23 @@ export default function Movies() {
   const blockedIds = [1280461, 715287, 611251, 259872, 1211373];
 
   useEffect(() => {
-    if (typeof window === "undefined") return; // serverda ishlamasin
+    if (typeof window === "undefined") return;
 
-  const token = localStorage.getItem("token");
+    // searchParams clientda o‘qiladi
+    const page = Number(searchParams.get("page")) || 1;
+    setPageFromUrl(page);
 
-  if (!token) {
-    router.push("/");
-    return;
-  }
+    const token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/");
+      return;
+    }
 
     setLoading(true);
 
     axios
       .get(
-        `${process.env.NEXT_PUBLIC_Project_TmdApi_Api}/movie/popular?api_key=${process.env.NEXT_PUBLIC_Project_TmdApi_Api_Key}&language=en-US&page=${pageFromUrl}`
+        `${process.env.NEXT_PUBLIC_Project_TmdApi_Api}/movie/popular?api_key=${process.env.NEXT_PUBLIC_Project_TmdApi_Api_Key}&language=en-US&page=${page}`
       )
       .then((res) => {
         setMovies(res.data.results);
@@ -43,7 +44,7 @@ export default function Movies() {
       })
       .catch((err) => console.error("API error:", err))
       .finally(() => setLoading(false));
-  }, [pageFromUrl, router]);
+  }, [searchParams, router]);
 
   if (loading) {
     return <Spinder />;
