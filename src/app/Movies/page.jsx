@@ -5,9 +5,7 @@ import { useEffect, useState } from "react";
 
 export default function MoviesPage({ searchParams }) {
   const router = useRouter();
-
-  // URL-dan page qiymatini olish
-  const pageFromUrl = Number(searchParams?.page) || 1;
+  const pageFromUrl = Number(searchParams.page) || 1;
 
   const [movies, setMovies] = useState([]);
 
@@ -27,14 +25,15 @@ export default function MoviesPage({ searchParams }) {
     fetchMovies();
   }, [pageFromUrl]);
 
-  // Pagination tugmasi
   const handleNextPage = () => {
     router.push(`/Movies?page=${pageFromUrl + 1}`);
+    router.refresh(); // 🔑 sahifani yangilaydi
   };
 
   const handlePrevPage = () => {
     if (pageFromUrl > 1) {
       router.push(`/Movies?page=${pageFromUrl - 1}`);
+      router.refresh(); // 🔑 sahifani yangilaydi
     }
   };
 
