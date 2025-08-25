@@ -2,8 +2,9 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import Navbar from "../../components/Navbar";
-import CartoonSlider from "../../components/CartoonSlider";
+import Navbar from "../components/Navbar";
+import CartoonSlider from "../components/CartoonSlider";
+
 
 export default function CartoonsPage() {
   const { page } = useParams(); // URL dan page olamiz
