@@ -17,21 +17,16 @@ export default function Movies() {
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      router.push("/");
-    }
-    setLoading(false);
-  }, [router]);
-
-  if (loading) {
-    return <Spinder />;
-  }
-
   const blockedIds = [1280461, 715287, 611251, 259872, 1211373];
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      router.push("/");
+      return; 
+    }
+
     axios
       .get(
         `${process.env.NEXT_PUBLIC_Project_TmdApi_Api}/movie/popular?api_key=${process.env.NEXT_PUBLIC_Project_TmdApi_Api_Key}&language=en-US&page=${pageFromUrl}`
@@ -40,8 +35,13 @@ export default function Movies() {
         setMovies(res.data.results);
         setTotalPages(res.data.total_pages);
       })
-      .catch((err) => console.error(err));
-  }, [pageFromUrl]);
+      .catch((err) => console.error(err))
+      .finally(() => setLoading(false));
+  }, [pageFromUrl, router]);
+
+  if (loading) {
+    return <Spinder />;
+  }
 
   const changePage = (newPage) => {
     router.push(`/Movies?page=${newPage}`);

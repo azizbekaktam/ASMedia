@@ -1,6 +1,7 @@
 "use client";
 
 import BackButton from "@/app/components/BackButton";
+import Spinder from "@/app/components/Spinder";
 import axios from "axios";
 import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
@@ -37,7 +38,7 @@ export default function MovieDetail() {
   }, [id]);
 
   if (!movie) {
-    return <p className="text-white p-6">Yuklanmoqda...</p>;
+    return <p className="text-white p-6"><Spinder/></p>;
   }
   const { poster_path, title, release_date, vote_average, overview } = movie;
   return (
