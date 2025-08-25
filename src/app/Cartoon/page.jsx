@@ -1,15 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Navbar from "../components/Navbar";
 import CartoonSlider from "../components/CartoonSlider";
 
 export default function CartoonsPage() {
-  const searchParams = useSearchParams();
-  const currentPage = Number(searchParams.get("page")) || 1;
-
+  const [page, setPage] = useState(1); // faqat state orqali boshqaramiz
   const [cartoons, setCartoons] = useState([]);
   const [loading, setLoading] = useState(true);
   const [totalPages, setTotalPages] = useState(1);
@@ -19,7 +16,7 @@ export default function CartoonsPage() {
       try {
         setLoading(true);
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_Project_TmdApi_Api}/discover/movie?api_key=${process.env.NEXT_PUBLIC_Project_TmdApi_Api_Key}&with_genres=16&language=en-US&page=${currentPage}`
+          `${process.env.NEXT_PUBLIC_Project_TmdApi_Api}/discover/movie?api_key=${process.env.NEXT_PUBLIC_Project_TmdApi_Api_Key}&with_genres=16&language=en-US&page=${page}`
         );
         const data = await res.json();
         setCartoons(data.results || []);
@@ -31,7 +28,10 @@ export default function CartoonsPage() {
       }
     }
     fetchCartoons();
-  }, [currentPage]);
+  }, [page]);
+
+  const prevPage = () => setPage((p) => Math.max(p - 1, 1));
+  const nextPage = () => setPage((p) => Math.min(p + 1, totalPages));
 
   if (loading) return <p className="text-center mt-10">⏳ Yuklanmoqda..</p>;
 
@@ -43,7 +43,7 @@ export default function CartoonsPage() {
       <h1 className="text-3xl font-extrabold text-center mb-10 text-gray-900 dark:text-white">
         🎬 Multfilmlar{" "}
         <span className="text-blue-600">
-          ({currentPage}/{totalPages})
+          ({page}/{totalPages})
         </span>
       </h1>
 
@@ -80,31 +80,33 @@ export default function CartoonsPage() {
 
       {/* Pagination */}
       <div className="flex justify-center items-center gap-6 mt-12">
-        <Link
-          href={`/Cartoons?page=${Math.max(currentPage - 1, 1)}`}
+        <button
+          onClick={prevPage}
+          disabled={page === 1}
           className={`px-5 py-2 rounded-xl font-medium ${
-            currentPage === 1
+            page === 1
               ? "opacity-40 cursor-not-allowed bg-gray-300"
               : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600"
           }`}
         >
           ◀ Oldingi
-        </Link>
+        </button>
 
         <span className="text-lg font-semibold text-gray-800 dark:text-gray-200">
-          Sahifa {currentPage} / {totalPages}
+          Sahifa {page} / {totalPages}
         </span>
 
-        <Link
-          href={`/Cartoons?page=${Math.min(currentPage + 1, totalPages)}`}
+        <button
+          onClick={nextPage}
+          disabled={page === totalPages}
           className={`px-5 py-2 rounded-xl font-medium ${
-            currentPage === totalPages
+            page === totalPages
               ? "opacity-40 cursor-not-allowed bg-gray-300"
               : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600"
           }`}
         >
           Keyingi ▶
-        </Link>
+        </button>
       </div>
     </main>
   );
