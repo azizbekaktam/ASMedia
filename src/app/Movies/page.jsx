@@ -1,4 +1,5 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Link from "next/link";
@@ -11,16 +12,17 @@ export default function Movies() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const [pageFromUrl, setPageFromUrl] = useState(1);
+  const [page, setPage] = useState(1);
   const [movies, setMovies] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
 
   const blockedIds = [1280461, 715287, 611251, 259872, 1211373];
 
+  // 🔹 searchParams o‘zgarishini kuzatamiz
   useEffect(() => {
-    const page = Number(searchParams.get("page")) || 1;
-    setPageFromUrl(page);
+    const currentPage = Number(searchParams.get("page")) || 1;
+    setPage(currentPage);
 
     const token = localStorage.getItem("token");
     if (!token) {
@@ -31,7 +33,7 @@ export default function Movies() {
     setLoading(true);
     axios
       .get(
-        `${process.env.NEXT_PUBLIC_Project_TmdApi_Api}/movie/popular?api_key=${process.env.NEXT_PUBLIC_Project_TmdApi_Api_Key}&language=en-US&page=${page}`
+        `${process.env.NEXT_PUBLIC_Project_TmdApi_Api}/movie/popular?api_key=${process.env.NEXT_PUBLIC_Project_TmdApi_Api_Key}&language=en-US&page=${currentPage}`
       )
       .then((res) => {
         setMovies(res.data.results);
@@ -41,17 +43,21 @@ export default function Movies() {
       .finally(() => setLoading(false));
   }, [searchParams, router]);
 
-  if (loading) return <Spinder />;
-
+  // 🔹 sahifani almashtirish uchun funksiya
   const changePage = (newPage) => {
-    router.push(`/Movies?page=${newPage}`, { scroll: false });
+    if (newPage >= 1 && newPage <= totalPages) {
+      router.push(`/Movies?page=${newPage}`, { scroll: false });
+    }
   };
+
+  if (loading) return <Spinder />;
 
   return (
     <div className="p-6 bg-white dark:bg-gray-900 min-h-screen transition-colors">
       <Navbar />
       <Slider />
 
+      {/* Movies Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-6 mb-8">
         {movies
           .filter((movie) => !blockedIds.includes(movie.id))
@@ -76,22 +82,23 @@ export default function Movies() {
           ))}
       </div>
 
+      {/* Pagination */}
       <div className="flex justify-center items-center gap-6">
         <button
-          onClick={() => changePage(Math.max(pageFromUrl - 1, 1))}
-          disabled={pageFromUrl === 1}
+          onClick={() => changePage(page - 1)}
+          disabled={page === 1}
           className="px-4 py-2 rounded-lg bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition"
         >
           ◀ Prev
         </button>
 
         <span className="text-gray-900 dark:text-gray-200 font-medium">
-          Page {pageFromUrl} / {totalPages}
+          Page {page} / {totalPages}
         </span>
 
         <button
-          onClick={() => changePage(Math.min(pageFromUrl + 1, totalPages))}
-          disabled={pageFromUrl === totalPages}
+          onClick={() => changePage(page + 1)}
+          disabled={page === totalPages}
           className="px-4 py-2 rounded-lg bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition"
         >
           Next ▶
