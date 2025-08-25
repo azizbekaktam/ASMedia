@@ -22,12 +22,14 @@ export default function Movies() {
   const blockedIds = [1280461, 715287, 611251, 259872, 1211373];
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    if (typeof window === "undefined") return; // serverda ishlamasin
 
-    if (!token) {
-      router.push("/");
-      return;
-    }
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    router.push("/");
+    return;
+  }
 
     setLoading(true);
 
