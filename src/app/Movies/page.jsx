@@ -2,12 +2,13 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Navbar from "../components/Navbar";
 import Slider from "../components/Slider";
 import Spinder from "../components/Spinder";
 
 export default function Movies() {
+  const searchParams = useSearchParams();
   const router = useRouter();
 
   const [pageFromUrl, setPageFromUrl] = useState(1);
@@ -18,8 +19,7 @@ export default function Movies() {
   const blockedIds = [1280461, 715287, 611251, 259872, 1211373];
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const page = Number(params.get("page")) || 1;
+    const page = Number(searchParams.get("page")) || 1;
     setPageFromUrl(page);
 
     const token = localStorage.getItem("token");
@@ -29,7 +29,6 @@ export default function Movies() {
     }
 
     setLoading(true);
-
     axios
       .get(
         `${process.env.NEXT_PUBLIC_Project_TmdApi_Api}/movie/popular?api_key=${process.env.NEXT_PUBLIC_Project_TmdApi_Api_Key}&language=en-US&page=${page}`
@@ -40,12 +39,12 @@ export default function Movies() {
       })
       .catch((err) => console.error("API error:", err))
       .finally(() => setLoading(false));
-  }, [router]);
+  }, [searchParams, router]);
 
   if (loading) return <Spinder />;
 
   const changePage = (newPage) => {
-    router.push(`/Movies?page=${newPage}`);
+    router.push(`/Movies?page=${newPage}`, { scroll: false });
   };
 
   return (
@@ -53,7 +52,6 @@ export default function Movies() {
       <Navbar />
       <Slider />
 
-      {/* Movies grid */}
       <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-6 mb-8">
         {movies
           .filter((movie) => !blockedIds.includes(movie.id))
@@ -78,13 +76,11 @@ export default function Movies() {
           ))}
       </div>
 
-      {/* Pagination */}
       <div className="flex justify-center items-center gap-6">
         <button
           onClick={() => changePage(Math.max(pageFromUrl - 1, 1))}
           disabled={pageFromUrl === 1}
-          className="px-4 py-2 rounded-lg bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-white 
-                     hover:bg-gray-300 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition"
+          className="px-4 py-2 rounded-lg bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition"
         >
           ◀ Prev
         </button>
@@ -96,8 +92,7 @@ export default function Movies() {
         <button
           onClick={() => changePage(Math.min(pageFromUrl + 1, totalPages))}
           disabled={pageFromUrl === totalPages}
-          className="px-4 py-2 rounded-lg bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-white 
-                     hover:bg-gray-300 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition"
+          className="px-4 py-2 rounded-lg bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition"
         >
           Next ▶
         </button>
