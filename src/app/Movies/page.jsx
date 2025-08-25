@@ -8,14 +8,17 @@ import Slider from "../components/Slider";
 import Spinder from "../components/Spinder";
 
 export default function Movies() {
-  const { page } = useParams();
+  const searchParams = useSearchParams();
   const router = useRouter();
 
-  const pageFromUrl = Number(page) || 1;
+  // URL-dan page ni olish (?page=2 kabi)
+  const pageFromUrl = Number(searchParams.get("page")) || 1;
+
   const [movies, setMovies] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
 
+  // Blocklangan filmlar
   const blockedIds = [1280461, 715287, 611251, 259872, 1211373];
 
   useEffect(() => {
@@ -26,6 +29,8 @@ export default function Movies() {
       return;
     }
 
+    setLoading(true);
+
     axios
       .get(
         `${process.env.NEXT_PUBLIC_Project_TmdApi_Api}/movie/popular?api_key=${process.env.NEXT_PUBLIC_Project_TmdApi_Api_Key}&language=en-US&page=${pageFromUrl}`
@@ -34,7 +39,7 @@ export default function Movies() {
         setMovies(res.data.results);
         setTotalPages(res.data.total_pages);
       })
-      .catch((err) => console.error(err))
+      .catch((err) => console.error("API error:", err))
       .finally(() => setLoading(false));
   }, [pageFromUrl, router]);
 
@@ -42,6 +47,7 @@ export default function Movies() {
     return <Spinder />;
   }
 
+  // Sahifa o‘zgartirish funksiyasi
   const changePage = (newPage) => {
     router.push(`/Movies?page=${newPage}`);
   };
@@ -51,6 +57,7 @@ export default function Movies() {
       <Navbar />
       <Slider />
 
+      {/* Movies grid */}
       <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-6 mb-8">
         {movies
           .filter((movie) => !blockedIds.includes(movie.id))
@@ -75,6 +82,7 @@ export default function Movies() {
           ))}
       </div>
 
+      {/* Pagination */}
       <div className="flex justify-center items-center gap-6">
         <button
           onClick={() => changePage(Math.max(pageFromUrl - 1, 1))}
