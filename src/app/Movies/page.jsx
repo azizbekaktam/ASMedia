@@ -2,13 +2,12 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Link from "next/link";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Navbar from "../components/Navbar";
 import Slider from "../components/Slider";
 import Spinder from "../components/Spinder";
 
 export default function Movies() {
-  const searchParams = useSearchParams();
   const router = useRouter();
 
   const [pageFromUrl, setPageFromUrl] = useState(1);
@@ -16,14 +15,11 @@ export default function Movies() {
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
 
-  // Blocklangan filmlar
   const blockedIds = [1280461, 715287, 611251, 259872, 1211373];
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    // searchParams clientda o‘qiladi
-    const page = Number(searchParams.get("page")) || 1;
+    const params = new URLSearchParams(window.location.search);
+    const page = Number(params.get("page")) || 1;
     setPageFromUrl(page);
 
     const token = localStorage.getItem("token");
@@ -44,13 +40,10 @@ export default function Movies() {
       })
       .catch((err) => console.error("API error:", err))
       .finally(() => setLoading(false));
-  }, [searchParams, router]);
+  }, [router]);
 
-  if (loading) {
-    return <Spinder />;
-  }
+  if (loading) return <Spinder />;
 
-  // Sahifa o‘zgartirish funksiyasi
   const changePage = (newPage) => {
     router.push(`/Movies?page=${newPage}`);
   };
