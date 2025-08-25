@@ -1,16 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
-import Navbar from "../components/Navbar";
-import CartoonSlider from "../components/CartoonSlider";
-import Spinder from "../components/Spinder";
+import Navbar from "../../components/Navbar";
+import CartoonSlider from "../../components/CartoonSlider";
 
-
-export default function CartoonsPage() {
-  const { page } = useParams(); // URL dan page olamiz
-  const router = useRouter();
-  const currentPage = Number(page) || 1;
+export default function CartoonsPage({ params }) {
+  const currentPage = Number(params.page) || 1;
 
   const [cartoons, setCartoons] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -35,30 +30,43 @@ export default function CartoonsPage() {
     fetchCartoons();
   }, [currentPage]);
 
-  if (loading) return <p className="text-center mt-10"><Spinder/></p>;
+  if (loading) return <p className="text-center mt-10">⏳ Yuklanmoqda..</p>;
 
   return (
-    <main className="p-6 bg-white dark:bg-gray-900 min-h-screen transition-colors">
+    <main className="bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-black min-h-screen p-6">
       <Navbar />
       <CartoonSlider />
 
-      <h1 className="text-3xl font-bold text-center mb-10">
-        🎬 Multfilmlar ({currentPage}/{totalPages})
+      <h1 className="text-3xl font-extrabold text-center mb-10 text-gray-900 dark:text-white">
+        🎬 Multfilmlar <span className="text-blue-600">({currentPage}/{totalPages})</span>
       </h1>
 
+      {/* Cards Grid */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
         {cartoons.map((cartoon) => (
-          <Link key={cartoon.id} href={`/Cartoon/${cartoon.id}`}>
-            <div className="bg-white dark:bg-gray-900 rounded-xl shadow-md hover:shadow-lg">
+          <Link
+            key={cartoon.id}
+            href={`/Cartoon/${cartoon.id}`}
+            className="group bg-white dark:bg-gray-900 rounded-2xl shadow-md overflow-hidden 
+                       hover:shadow-2xl transition duration-300 transform hover:-translate-y-2"
+          >
+            <div className="relative">
               <img
                 src={`${process.env.NEXT_PUBLIC_Project_TmdApi_Api_Img}/t/p/w500${cartoon.poster_path}`}
                 alt={cartoon.title}
-                className="w-full h-72 object-cover"
+                className="w-full h-72 object-cover group-hover:scale-105 transition-transform duration-300"
               />
-              <div className="p-3">
-                <h2 className="text-lg font-semibold truncate">{cartoon.title}</h2>
-                <p className="text-sm text-gray-500">📅 {cartoon.release_date}</p>
-              </div>
+              <span className="absolute top-3 right-3 bg-yellow-500 text-white text-sm font-bold px-2 py-1 rounded-lg shadow">
+                ⭐ {cartoon.vote_average?.toFixed(1) || "N/A"}
+              </span>
+            </div>
+            <div className="p-4">
+              <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200 truncate group-hover:text-blue-600 transition">
+                {cartoon.title}
+              </h2>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                📅 {cartoon.release_date}
+              </p>
             </div>
           </Link>
         ))}
@@ -66,23 +74,31 @@ export default function CartoonsPage() {
 
       {/* Pagination */}
       <div className="flex justify-center items-center gap-6 mt-12">
-        <button
-          onClick={() => router.push(`/Cartoons/${Math.max(currentPage - 1, 1)}`)}
-          disabled={currentPage === 1}
-          className="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-lg disabled:opacity-40"
+        <Link
+          href={`/Cartoons/${Math.max(currentPage - 1, 1)}`}
+          className={`px-5 py-2 rounded-xl font-medium ${
+            currentPage === 1
+              ? "opacity-40 cursor-not-allowed bg-gray-300"
+              : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600"
+          }`}
         >
           ◀ Oldingi
-        </button>
-        <span>
+        </Link>
+
+        <span className="text-lg font-semibold text-gray-800 dark:text-gray-200">
           Sahifa {currentPage} / {totalPages}
         </span>
-        <button
-          onClick={() => router.push(`/Cartoons/${Math.min(currentPage + 1, totalPages)}`)}
-          disabled={currentPage === totalPages}
-          className="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-lg disabled:opacity-40"
+
+        <Link
+          href={`/Cartoons/${Math.min(currentPage + 1, totalPages)}`}
+          className={`px-5 py-2 rounded-xl font-medium ${
+            currentPage === totalPages
+              ? "opacity-40 cursor-not-allowed bg-gray-300"
+              : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600"
+          }`}
         >
           Keyingi ▶
-        </button>
+        </Link>
       </div>
     </main>
   );
