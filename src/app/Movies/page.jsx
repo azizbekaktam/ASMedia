@@ -8,11 +8,10 @@ import Slider from "../components/Slider";
 import Spinder from "../components/Spinder";
 
 export default function Movies() {
-  const searchParams = useSearchParams();
+  const { page } = useParams();
   const router = useRouter();
 
-  const pageFromUrl = Number(searchParams.get("page")) || 1;
-
+  const pageFromUrl = Number(page) || 1;
   const [movies, setMovies] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
@@ -24,7 +23,7 @@ export default function Movies() {
 
     if (!token) {
       router.push("/");
-      return; 
+      return;
     }
 
     axios
