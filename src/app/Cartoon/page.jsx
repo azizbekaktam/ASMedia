@@ -36,11 +36,11 @@ export default function CartoonsPage() {
   if (loading) return <p className="text-center mt-10">⏳ Yuklanmoqda..</p>;
 
   return (
-    <main className="bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-black min-h-screen p-6">
+    <main className="bg-gradient-to-b from-gray-50 to-white  min-h-screen p-6">
       <Navbar />
       <CartoonSlider />
 
-      <h1 className="text-3xl font-extrabold text-center mb-10 text-gray-900 dark:text-white">
+      <h1 className="text-3xl font-extrabold text-center mb-10 text-gray-900 ">
         🎬 Multfilmlar{" "}
         <span className="text-blue-600">
           ({page}/{totalPages})
@@ -53,7 +53,7 @@ export default function CartoonsPage() {
           <Link
             key={cartoon.id}
             href={`/Cartoon/${cartoon.id}`}
-            className="group bg-white dark:bg-gray-900 rounded-2xl shadow-md overflow-hidden 
+            className="group bg-white  rounded-2xl shadow-md overflow-hidden 
                        hover:shadow-2xl transition duration-300 transform hover:-translate-y-2"
           >
             <div className="relative">
@@ -67,10 +67,10 @@ export default function CartoonsPage() {
               </span>
             </div>
             <div className="p-4">
-              <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200 truncate group-hover:text-blue-600 transition">
+              <h2 className="text-lg font-semibold text-gray-800  truncate group-hover:text-blue-600 transition">
                 {cartoon.title}
               </h2>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+              <p className="text-sm text-gray-600  mt-1">
                 📅 {cartoon.release_date}
               </p>
             </div>
@@ -92,7 +92,7 @@ export default function CartoonsPage() {
           ◀ Oldingi
         </button>
 
-        <span className="text-lg font-semibold text-gray-800 dark:text-gray-200">
+        <span className="text-lg font-semibold text-gray-800 ">
           Sahifa {page} / {totalPages}
         </span>
 
@@ -102,7 +102,7 @@ export default function CartoonsPage() {
           className={`px-5 py-2 rounded-xl font-medium ${
             page === totalPages
               ? "opacity-40 cursor-not-allowed bg-gray-300"
-              : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600"
+              : "bg-gray-200  text-gray-700  hover:bg-gray-300 dark:hover:bg-gray-600"
           }`}
         >
           Keyingi ▶
