@@ -37,7 +37,7 @@ export default function CartoonsPage() {
       }
     }
     fetchCartoons();
-    router.replace(`/Cartoons?page=${page}`, undefined, { scroll: false });
+    router.replace(`/Cartoon?page=${page}`, undefined, { scroll: false });
   }, [page, router]);
 
   const prevPage = () => setPage((p) => Math.max(p - 1, 1));
