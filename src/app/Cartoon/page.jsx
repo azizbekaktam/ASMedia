@@ -1,111 +1,81 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
 import Navbar from "../components/Navbar";
 import CartoonSlider from "../components/CartoonSlider";
 import Spinder from "../components/Spinder";
 
 export default function CartoonsPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-
-  const currentPage = parseInt(searchParams.get("page")) || 1; 
+  const [page, setPage] = useState(1);
   const [cartoons, setCartoons] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [totalPages, setTotalPages] = useState(1);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const current = parseInt(params.get("page")) || 1;
+    setPage(current);
+  }, []);
 
   useEffect(() => {
     async function fetchCartoons() {
       try {
         setLoading(true);
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_Project_TmdApi_Api}/discover/movie?api_key=${process.env.NEXT_PUBLIC_Project_TmdApi_Api_Key}&with_genres=16&language=en-US&page=${currentPage}`
+          `${process.env.NEXT_PUBLIC_Project_TmdApi_Api}/discover/movie?api_key=${process.env.NEXT_PUBLIC_Project_TmdApi_Api_Key}&with_genres=16&language=en-US&page=${page}`
         );
         const data = await res.json();
         setCartoons(data.results || []);
         setTotalPages(data.total_pages || 1);
       } catch (error) {
-        console.error("Error fetching cartoons:", error);
+        console.error(error);
       } finally {
         setLoading(false);
       }
     }
     fetchCartoons();
-  }, [currentPage]);
+    router.replace(`/Cartoons?page=${page}`, undefined, { scroll: false });
+  }, [page, router]);
 
-  const changePage = (page) => {
-    router.push(`/Cartoons?page=${page}`);
-  };
+  const prevPage = () => setPage((p) => Math.max(p - 1, 1));
+  const nextPage = () => setPage((p) => Math.min(p + 1, totalPages));
 
-  if (loading) return <p className="text-center mt-10"><Spinder/></p>;
+  if (loading) return <Spinder />;
 
   return (
-    <main className="bg-gradient-to-b from-gray-50 to-white min-h-screen p-6">
+    <main className="min-h-screen p-6 bg-gray-50">
       <Navbar />
       <CartoonSlider />
 
-      <h1 className="text-3xl font-extrabold text-center mb-10 text-gray-900">
-        🎬 Multfilmlar <span className="text-blue-600">({currentPage}/{totalPages})</span>
+      <h1 className="text-center text-3xl font-bold mb-10">
+        🎬 Multfilmlar ({page}/{totalPages})
       </h1>
 
-      {/* Cards */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
-        {cartoons.map((cartoon) => (
-          <Link
-            key={cartoon.id}
-            href={`/Cartoon/${cartoon.id}`}
-            className="group bg-white rounded-2xl shadow-md overflow-hidden 
-                       hover:shadow-2xl transition duration-300 transform hover:-translate-y-2"
-          >
-            <div className="relative">
-              <img
-                src={`${process.env.NEXT_PUBLIC_Project_TmdApi_Api_Img}/t/p/w500${cartoon.poster_path}`}
-                alt={cartoon.title}
-                className="w-full h-72 object-cover group-hover:scale-105 transition-transform duration-300"
-              />
-              <span className="absolute top-3 right-3 bg-yellow-500 text-white text-sm font-bold px-2 py-1 rounded-lg shadow">
-                ⭐ {cartoon.vote_average?.toFixed(1) || "N/A"}
-              </span>
-            </div>
-            <div className="p-4">
-              <h2 className="text-lg font-semibold text-gray-800 truncate group-hover:text-blue-600 transition">
-                {cartoon.title}
-              </h2>
-              <p className="text-sm text-gray-600 mt-1">📅 {cartoon.release_date}</p>
+        {cartoons.map((c) => (
+          <Link key={c.id} href={`/Cartoon/${c.id}`} className="group bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition transform hover:-translate-y-1">
+            <img
+              src={`${process.env.NEXT_PUBLIC_Project_TmdApi_Api_Img}/t/p/w500${c.poster_path}`}
+              alt={c.title}
+              className="w-full h-72 object-cover"
+            />
+            <div className="p-2">
+              <h2 className="font-semibold truncate">{c.title}</h2>
+              <p className="text-sm text-gray-500">📅 {c.release_date}</p>
             </div>
           </Link>
         ))}
       </div>
 
-      {/* Pagination */}
-      <div className="flex justify-center items-center gap-6 mt-12">
-        <button
-          onClick={() => changePage(Math.max(currentPage - 1, 1))}
-          disabled={currentPage === 1}
-          className={`px-5 py-2 rounded-xl font-medium ${
-            currentPage === 1
-              ? "opacity-40 cursor-not-allowed bg-gray-300"
-              : "bg-gray-200 hover:bg-gray-300"
-          }`}
-        >
+      <div className="flex justify-center items-center gap-4 mt-8">
+        <button onClick={prevPage} disabled={page === 1} className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50">
           ◀ Oldingi
         </button>
-
-        <span className="text-lg font-semibold text-gray-800">
-          Sahifa {currentPage} / {totalPages}
-        </span>
-
-        <button
-          onClick={() => changePage(Math.min(currentPage + 1, totalPages))}
-          disabled={currentPage === totalPages}
-          className={`px-5 py-2 rounded-xl font-medium ${
-            currentPage === totalPages
-              ? "opacity-40 cursor-not-allowed bg-gray-300"
-              : "bg-gray-200 hover:bg-gray-300"
-          }`}
-        >
+        <span>{page} / {totalPages}</span>
+        <button onClick={nextPage} disabled={page === totalPages} className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50">
           Keyingi ▶
         </button>
       </div>
