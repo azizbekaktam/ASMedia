@@ -10,7 +10,6 @@ import Spinder from "../components/Spinder";
 
 export default function Movies() {
   const router = useRouter();
-
   const [page, setPage] = useState(1);
   const [movies, setMovies] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
