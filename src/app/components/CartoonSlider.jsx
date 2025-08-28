@@ -49,9 +49,9 @@ export default function CartoonSlider() {
     <h2 className="text-2xl md:text-3xl font-bold drop-shadow-lg">
       {cartoons[current].title}
     </h2>
-    <button className="px-4 py-2 rounded-lg bg-yellow-400 hover:bg-yellow-300 text-black font-semibold shadow-md transition-colors">
+    {/* <button className="px-4 py-2 rounded-lg bg-yellow-400 hover:bg-yellow-300 text-black font-semibold shadow-md transition-colors">
       Watch Now
-    </button>
+    </button> */}
   </div>
 
   <button

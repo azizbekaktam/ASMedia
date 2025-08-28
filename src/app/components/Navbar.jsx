@@ -22,7 +22,15 @@ export default function Navbar() {
              px-6 py-3 shadow-lg transition-colors"
 >
   <div className="font-extrabold text-xl tracking-wide text-yellow-500">
-    As<span className="text-gray-900 dark:text-white">Media</span>
+    As<span className="text-gray-900 dark:text-white">
+        <Image
+          src="/asmedia-logo.png"
+          alt="AsMedia Logo"
+          width={140}
+          height={50}
+          className="cursor-pointer"
+        />
+    </span>
   </div>
 
   <ul className="flex gap-6 font-medium">

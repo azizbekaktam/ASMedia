@@ -47,9 +47,9 @@ export default function Slider() {
 
   <div className="absolute bottom-16 left-10 text-white space-y-3">
     <h2 className="text-3xl font-bold drop-shadow-lg">{movies[current].title}</h2>
-    <button className="px-4 py-2 rounded-lg bg-yellow-500 hover:bg-yellow-400 text-black font-semibold shadow-md transition-colors">
+    {/* <button className="px-4 py-2 rounded-lg bg-yellow-500 hover:bg-yellow-400 text-black font-semibold shadow-md transition-colors">
       Watch Now
-    </button>
+    </button> */}
   </div>
 
   <button
