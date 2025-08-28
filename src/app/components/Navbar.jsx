@@ -25,7 +25,7 @@ export default function Navbar() {
   <div className="font-extrabold text-xl tracking-wide text-yellow-500">
     As<span className="text-gray-900 dark:text-white">
         <Image
-        src="/logo.png"
+        src="/asmedia-logo.png"
         alt="AsMedia Logo"
         width={120}
         height={40}
@@ -57,7 +57,7 @@ export default function Navbar() {
     </Link>
   </ul>
 
-  <div className="flex items-center gap-4">
+  <div className="flex cursor-pointer items-center gap-4">
     <Search />
 
     <div
@@ -67,8 +67,10 @@ export default function Navbar() {
     >
       {username ? username[0].toUpperCase() : "?"}
     </div>
-
+<div className="cursor-pointer">
     <LogOut />
+
+</div>
   </div>
 </nav>
 
