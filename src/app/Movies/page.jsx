@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Navbar from "../components/Navbar";
 import Spinder from "../components/Spinder";
+import Slider from "../components/Slider";
 
 export default function MoviesPage() {
   const router = useRouter();
@@ -60,7 +61,7 @@ export default function MoviesPage() {
   return (
     <main className="min-h-screen p-6 bg-gray-50">
       <Navbar />
-
+<Slider/>
       <h1 className="text-center text-3xl font-bold mb-10">
         🎬 Kinolar ({page}/{totalPages})
       </h1>
