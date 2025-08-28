@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Search from "./Search";
 import LogOut from "./LogOut";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Navbar() {
   const [username, setUsername] = useState("");
@@ -24,12 +25,12 @@ export default function Navbar() {
   <div className="font-extrabold text-xl tracking-wide text-yellow-500">
     As<span className="text-gray-900 dark:text-white">
         <Image
-          src="/asmedia-logo.png"
-          alt="AsMedia Logo"
-          width={140}
-          height={50}
-          className="cursor-pointer"
-        />
+        src="/logo.png"
+        alt="AsMedia Logo"
+        width={120}
+        height={40}
+        priority
+      />
     </span>
   </div>
 
