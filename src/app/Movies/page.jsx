@@ -70,7 +70,7 @@ export default function MoviesPage() {
         {movies.map((m) => (
           <Link
             key={m.id}
-            href={`/Movie/${m.id}`}
+            href={`/Movies/${m.id}`}
             className="group bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition transform hover:-translate-y-1"
           >
             <img

@@ -107,9 +107,7 @@ export default function Search() {
     placeholder="Search movies..."
     value={query}
     onChange={handleChange}
-    onFocus={() => setShowDropdown(true)}   // 🔥 Fokusda ko‘rsatish
-    onBlur={() => setTimeout(() => setShowDropdown(false), 200)} // 🔥 Fokustan chiqsa yopiladi
-    className="w-full rounded-xl border border-gray-300 
+       className="w-full rounded-xl border border-gray-300 
                bg-gray-50 px-4 py-2 text-gray-900 placeholder-gray-500
                shadow-sm focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400 
                dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 
