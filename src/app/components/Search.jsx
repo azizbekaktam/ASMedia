@@ -75,7 +75,7 @@ export default function Search() {
                      cursor-pointer transition-colors"
         >
           <Link
-            href={`/movie/${movie.id}`}
+            href={`/Movies/${movie.id}`}
             onClick={() => setQuery("")}
             className="block"
           >
