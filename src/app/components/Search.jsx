@@ -114,14 +114,14 @@ export default function Search() {
                dark:placeholder-gray-400 transition-all"
   />
 
-  {loading && query && showDropdown && (
+  {loading && query(
     <div className="absolute left-0 right-0 mt-1 bg-white dark:bg-gray-900 
                     rounded-xl shadow-lg p-3 z-20 text-center text-gray-500 dark:text-gray-400">
       <Spinder />
     </div>
   )}
 
-  {results.length > 0 && query && showDropdown && (
+  {results.length > 0 && query  (
     <ul className="absolute left-0 right-0 mt-1 
                    bg-white dark:bg-gray-900 rounded-xl shadow-lg 
                    max-h-64 overflow-auto z-20 divide-y divide-gray-200 dark:divide-gray-700">
@@ -135,7 +135,7 @@ export default function Search() {
             href={`/Movies/${movie.id}`}
             onClick={() => {
               setQuery("")
-              setShowDropdown(false)
+             
             }}
             className="block"
           >
@@ -153,7 +153,7 @@ export default function Search() {
     </ul>
   )}
 
-  {results.length === 0 && query && !loading && showDropdown && (
+  {results.length === 0 && query && !loading  (
     <div className="absolute left-0 right-0 mt-1 bg-white dark:bg-gray-900 
                     rounded-xl shadow-lg p-3 z-20 text-center text-gray-500 dark:text-gray-400">
       No results found
