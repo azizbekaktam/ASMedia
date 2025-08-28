@@ -62,7 +62,6 @@ export default function MovieDetail() {
         ⭐ Rating: {vote_average} / 10
       </p>
 
-      {/* Trailer */}
       {trailer && (
         <div className="mt-6">
           <h2 className="text-xl font-semibold mb-2">🎬 Trailer</h2>

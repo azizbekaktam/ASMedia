@@ -35,7 +35,6 @@ export default function MoviesPage() {
         );
         const data = await res.json();
 
-        // 🚫 blockedIds ni filtr qilamiz
         const filtered = (data.results || []).filter(
           (m) => !blockedIds.includes(m.id)
         );

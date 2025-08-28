@@ -49,7 +49,6 @@ export default function CartoonDetail() {
   <BackButton />
 
   <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-10 mt-10">
-    {/* Poster */}
     <div className="flex-shrink-0">
       <img
         src={`${process.env.NEXT_PUBLIC_Project_TmdApi_Api_Img}/t/p/w500${cartoon.poster_path}`}
@@ -58,7 +57,6 @@ export default function CartoonDetail() {
       />
     </div>
 
-    {/* Info */}
     <div className="flex-1">
       <h1 className="text-4xl font-extrabold text-gray-900 tracking-tight">
         {cartoon.title}
@@ -78,7 +76,6 @@ export default function CartoonDetail() {
         </span>
       </div>
 
-      {/* Trailer */}
       {trailerKey && (
         <div className="mt-10">
           <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
