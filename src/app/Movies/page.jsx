@@ -41,7 +41,6 @@ export default function Movies() {
         setMovies(data.results || []);
         setTotalPages(data.total_pages || 1);
 
-        // 🔑 URL query yangilash (faqat page o‘zgarsa)
         router.replace(`/Movies?page=${page}`);
       } catch (e) {
         console.error("API error:", e);
@@ -59,7 +58,7 @@ export default function Movies() {
   const nextPage = () => setPage((p) => Math.min(p + 1, totalPages));
 
   return (
-    <div className="p-6 bg-white dark:bg-gray-900 min-h-screen transition-colors">
+    <div className="p-6 bg-white min-h-screen">
       <Navbar />
       <Slider />
 
@@ -68,17 +67,17 @@ export default function Movies() {
           .filter((m) => !blockedIds.includes(m.id))
           .map((movie) => (
             <Link href={`/Movies/${movie.id}`} key={movie.id}>
-              <div className="bg-white dark:bg-gray-800 shadow-md rounded-xl overflow-hidden cursor-pointer hover:shadow-lg hover:scale-105 transition-transform duration-300">
+              <div className="bg-white shadow-md rounded-xl overflow-hidden cursor-pointer hover:shadow-lg hover:scale-105 transition-transform duration-300">
                 <img
                   src={`${process.env.NEXT_PUBLIC_Project_TmdApi_Api_Img}${movie.poster_path}`}
                   alt={movie.title}
                   className="w-full h-72 object-cover"
                 />
                 <div className="p-3">
-                  <h3 className="text-sm font-bold truncate text-gray-900 dark:text-white">
+                  <h3 className="text-sm font-bold truncate text-gray-900">
                     {movie.title}
                   </h3>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                  <p className="text-xs text-gray-500">
                     📅 {movie.release_date}
                   </p>
                 </div>
@@ -91,19 +90,19 @@ export default function Movies() {
         <button
           onClick={prevPage}
           disabled={page === 1}
-          className="px-4 py-2 rounded-lg bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition"
+          className="px-4 py-2 rounded-lg bg-gray-200 text-gray-800 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition"
         >
           ◀ Prev
         </button>
 
-        <span className="text-gray-900 dark:text-gray-200 font-medium">
+        <span className="text-gray-900 font-medium">
           Page {page} / {totalPages}
         </span>
 
         <button
           onClick={nextPage}
           disabled={page === totalPages}
-          className="px-4 py-2 rounded-lg bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition"
+          className="px-4 py-2 rounded-lg bg-gray-200 text-gray-800 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition"
         >
           Next ▶
         </button>

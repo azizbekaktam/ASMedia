@@ -28,7 +28,7 @@ export default function CartoonsPage() {
           `${process.env.NEXT_PUBLIC_Project_TmdApi_Api}/discover/movie?api_key=${process.env.NEXT_PUBLIC_Project_TmdApi_Api_Key}&with_genres=16&language=en-US&page=${page}`
         );
         const data = await res.json();
-        setCartoons(data.results || []);
+        setCartoons(data.results);
         setTotalPages(data.total_pages || 1);
       } catch (error) {
         console.error(error);
