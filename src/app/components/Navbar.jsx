@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import Search from "./Search";
 import LogOut from "./LogOut";
 import Link from "next/link";
-import Image from "next/image";
 
 export default function Navbar() {
   const [username, setUsername] = useState("");
@@ -23,15 +22,7 @@ export default function Navbar() {
              px-6 py-3 shadow-lg transition-colors"
 >
   <div className="font-extrabold text-xl tracking-wide text-yellow-500">
-    As<span className="text-gray-900 dark:text-white">
-        <Image
-        src="/asmedia-logo.png"
-        alt="AsMedia Logo"
-        width={120}
-        height={40}
-        priority
-      />
-    </span>
+    As<span className="text-gray-900 dark:text-white">Media</span>
   </div>
 
   <ul className="flex gap-6 font-medium">
@@ -57,7 +48,7 @@ export default function Navbar() {
     </Link>
   </ul>
 
-  <div className="flex cursor-pointer items-center gap-4">
+  <div className="flex items-center gap-4">
     <Search />
 
     <div
@@ -67,10 +58,8 @@ export default function Navbar() {
     >
       {username ? username[0].toUpperCase() : "?"}
     </div>
-<div className="cursor-pointer">
-    <LogOut />
 
-</div>
+    <LogOut />
   </div>
 </nav>
 
