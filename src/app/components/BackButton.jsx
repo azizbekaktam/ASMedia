@@ -16,15 +16,18 @@ export default function BackButton() {
   };
 
   return (
-   <button
+<button
   onClick={handleBack}
-  className="px-4 py-2 rounded font-medium 
-             bg-gray-200 text-gray-800 hover:bg-gray-300 
-             dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600 
-             transition-colors flex items-center gap-2"
+  className="px-5 py-2.5 rounded-lg font-semibold
+             bg-gradient-to-r from-gray-200 to-gray-300 
+             text-gray-800 hover:from-gray-300 hover:to-gray-400
+             dark:from-gray-700 dark:to-gray-800 
+             dark:text-white dark:hover:from-gray-600 dark:hover:to-gray-700
+             transition-all shadow-sm hover:shadow-md"
 >
   ⬅ Orqaga
 </button>
+
 
   );
 }

@@ -36,49 +36,58 @@ export default function CartoonSlider() {
     );
 
   return (
-    <div className="relative w-full h-[400px] overflow-hidden rounded-lg shadow-md">
-      {/* 🎬 Cartoon slide image */}
-      <img
-        src={`${process.env.NEXT_PUBLIC_Project_TmdApi_Api_SliderImg}/t/p/original${cartoons[current].backdrop_path}`}
-        alt={cartoons[current].title}
-        className="w-full h-full object-cover transition-all duration-500"
-      />
+  <div className="relative w-full h-[420px] overflow-hidden rounded-2xl shadow-xl">
+  <img
+    src={`${process.env.NEXT_PUBLIC_Project_TmdApi_Api_SliderImg}/t/p/original${cartoons[current].backdrop_path}`}
+    alt={cartoons[current].title}
+    className="w-full h-full object-cover transition-transform duration-700 ease-in-out scale-105 hover:scale-110"
+  />
 
-      {/* ◀ Prev button */}
-      <button
-        onClick={prevSlide}
-        className="absolute top-1/2 left-5 -translate-y-1/2 
-                 bg-black/40 hover:bg-black/60 
-                 text-white px-3 py-1 rounded-full 
-                 backdrop-blur-sm transition-colors"
-      >
-        ◀
-      </button>
+  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
 
-      {/* ▶ Next button */}
-      <button
-        onClick={nextSlide}
-        className="absolute top-1/2 right-5 -translate-y-1/2 
-                 bg-black/40 hover:bg-black/60 
-                 text-white px-3 py-1 rounded-full 
-                 backdrop-blur-sm transition-colors"
-      >
-        ▶
-      </button>
+  <div className="absolute bottom-14 left-10 text-white space-y-3">
+    <h2 className="text-2xl md:text-3xl font-bold drop-shadow-lg">
+      {cartoons[current].title}
+    </h2>
+    <button className="px-4 py-2 rounded-lg bg-yellow-400 hover:bg-yellow-300 text-black font-semibold shadow-md transition-colors">
+      Watch Now
+    </button>
+  </div>
 
-      {/* 🔘 Indicators */}
-      <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-2">
-        {cartoons.map((_, i) => (
-          <div
-            key={i}
-            className={`w-3 h-3 rounded-full transition-colors ${
-              i === current
-                ? "bg-yellow-400 shadow-lg"
-                : "bg-gray-300 dark:bg-gray-600"
-            }`}
-          ></div>
-        ))}
-      </div>
-    </div>
+  <button
+    onClick={prevSlide}
+    className="absolute top-1/2 left-4 -translate-y-1/2 
+               bg-black/40 hover:bg-black/70 
+               text-white p-3 rounded-full 
+               backdrop-blur-sm transition-all shadow-md"
+  >
+    ◀
+  </button>
+
+  <button
+    onClick={nextSlide}
+    className="absolute top-1/2 right-4 -translate-y-1/2 
+               bg-black/40 hover:bg-black/70 
+               text-white p-3 rounded-full 
+               backdrop-blur-sm transition-all shadow-md"
+  >
+    ▶
+  </button>
+
+  <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-2">
+    {cartoons.map((_, i) => (
+      <div
+        key={i}
+        onClick={() => setCurrent(i)}
+        className={`w-3 h-3 rounded-full cursor-pointer transition-all ${
+          i === current
+            ? "bg-yellow-400 shadow-lg scale-110"
+            : "bg-gray-300 dark:bg-gray-600 hover:bg-yellow-300"
+        }`}
+      ></div>
+    ))}
+  </div>
+</div>
+
   );
 }

@@ -7,15 +7,25 @@ const LogOut = () => {
         window.location.reload();
       };
   return (
-  <button
+<button
   onClick={handleLogout}
-  className="px-4 py-2 rounded font-medium 
-             bg-red-600 text-white hover:bg-red-500 
-             dark:bg-red-700 dark:hover:bg-red-600 
-             transition-colors"
+  className="group relative inline-flex items-center gap-2 px-5 py-2.5 
+             rounded-xl font-semibold tracking-wide 
+             bg-gradient-to-r from-red-600 to-red-500 
+             hover:from-red-500 hover:to-red-400 
+             text-white shadow-md hover:shadow-lg 
+             transition-all duration-300 ease-out"
 >
-  Logout
+  <span>Logout</span>
+  <span
+    className="absolute right-3 opacity-0 group-hover:opacity-100 
+               translate-x-1 group-hover:translate-x-0 
+               transition-all duration-300"
+  >
+    🚪
+  </span>
 </button>
+
 
   )
 }
