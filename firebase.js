@@ -2,7 +2,8 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
-import { getAnalytics } from "firebase/analytics";
+// import { getAnalytics } from "firebase/analytics"; ❌ bu build vaqtida xato beradi
+
 const firebaseConfig = {
   apiKey: "AIzaSyBvCqdbIIlIDUHc-F6KivKT3CXufxcVGeM",
   authDomain: "asmedia-6aed9.firebaseapp.com",
@@ -14,5 +15,16 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+
+// Exportlar
 export const auth = getAuth(app);
 export const db = getFirestore(app);
+
+// Agar analytics kerak bo‘lsa, faqat clientda chaqiramiz:
+export let analytics;
+if (typeof window !== "undefined") {
+  // dynamic import qilamiz
+  import("firebase/analytics").then(({ getAnalytics }) => {
+    analytics = getAnalytics(app);
+  });
+}
