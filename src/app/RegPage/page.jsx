@@ -2,7 +2,8 @@
 import { useState } from "react";
 import { auth } from "../../../firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { useRouter, Link } from "next/navigation";
+import { useRouter } from "next/navigation";
+import Link from "next/link"; // ✅ To‘g‘ri import
 
 export default function RegisterPage() {
   const [email, setEmail] = useState("");

@@ -2,7 +2,8 @@
 import { useState } from "react";
 import { auth } from "../../../firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { useRouter, Link } from "next/navigation";
+import { useRouter } from "next/navigation";
+import Link from "next/link"; // ✅ To‘g‘ri import
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -13,7 +14,7 @@ export default function LoginPage() {
   const handleLogin = async () => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      router.push("/Movies"); // Login muvaffaqiyatli bo‘lsa Home ga yo‘naltiradi
+      router.push("/Movies");
     } catch (err) {
       setError(err.message);
     }
@@ -36,10 +37,18 @@ export default function LoginPage() {
         onChange={e => setPassword(e.target.value)}
         className="border p-2 w-full mb-2 rounded"
       />
-      <button onClick={handleLogin} className="bg-blue-500 text-white p-2 rounded w-full">Login</button>
+      <button
+        onClick={handleLogin}
+        className="bg-blue-500 text-white p-2 rounded w-full"
+      >
+        Login
+      </button>
       {error && <p className="text-red-500 mt-2">{error}</p>}
       <p className="mt-4 text-sm">
-        Hali ro‘yxatdan o‘tmaganmisiz? <Link href="/RegPage" className="text-blue-600 underline">Register</Link>
+        Hali ro‘yxatdan o‘tmaganmisiz?{" "}
+        <Link href="/RegPage" className="text-blue-600 underline">
+          Register
+        </Link>
       </p>
     </div>
   );
