@@ -1,10 +1,12 @@
+import { useRouter } from 'next/navigation';
 import React from 'react'
 
 const LogOut = () => {
+  const router = useRouter()
       const handleLogout = () => {
         localStorage.removeItem("token");
         localStorage.removeItem("username");
-        window.location.reload();
+router.push("/")
       };
   return (
 <button
