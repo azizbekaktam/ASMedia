@@ -3,7 +3,7 @@ import { useState } from "react";
 import { auth } from "../../../firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useRouter } from "next/navigation";
-import Link from "next/link"; // ✅ To‘g‘ri import
+import Link from "next/link";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -16,40 +16,46 @@ export default function LoginPage() {
       await signInWithEmailAndPassword(auth, email, password);
       router.push("/Movies");
     } catch (err) {
-      setError(err.message);
+      setError("Email yoki parol noto‘g‘ri ❌");
     }
   };
 
   return (
-    <div className="p-4 max-w-md mx-auto mt-20">
-      <h2 className="text-2xl font-bold mb-4">Login</h2>
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={e => setEmail(e.target.value)}
-        className="border p-2 w-full mb-2 rounded"
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={e => setPassword(e.target.value)}
-        className="border p-2 w-full mb-2 rounded"
-      />
-      <button
-        onClick={handleLogin}
-        className="bg-blue-500 text-white p-2 rounded w-full"
-      >
-        Login
-      </button>
-      {error && <p className="text-red-500 mt-2">{error}</p>}
-      <p className="mt-4 text-sm">
-        Hali ro‘yxatdan o‘tmaganmisiz?{" "}
-        <Link href="/RegPage" className="text-blue-600 underline">
-          Register
-        </Link>
-      </p>
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <div className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-md">
+        <h2 className="text-3xl font-bold text-center mb-6 text-gray-800">
+          Login
+        </h2>
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={e => setEmail(e.target.value)}
+          className="border border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 outline-none p-3 w-full mb-4 rounded-lg"
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={e => setPassword(e.target.value)}
+          className="border border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 outline-none p-3 w-full mb-4 rounded-lg"
+        />
+        <button
+          onClick={handleLogin}
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition"
+        >
+          Login
+        </button>
+        {error && (
+          <p className="text-red-500 text-center mt-3">{error}</p>
+        )}
+        <p className="mt-6 text-sm text-center text-gray-600">
+          Hali ro‘yxatdan o‘tmaganmisiz?{" "}
+          <Link href="/RegPage" className="text-blue-600 hover:underline">
+            Register
+          </Link>
+        </p>
+      </div>
     </div>
   );
 }

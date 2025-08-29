@@ -3,8 +3,9 @@ import { useState } from "react";
 import { auth } from "../../../firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
-export default function RegisterPage() {
+export default function RegPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -13,36 +14,48 @@ export default function RegisterPage() {
   const handleRegister = async () => {
     try {
       await createUserWithEmailAndPassword(auth, email, password);
-      router.push("/LoginPage"); // Registratsiya bo‘lgandan keyin login sahifaga yuboradi
+      router.push("/Movies");
     } catch (err) {
-      setError(err.message);
+      setError("Ro‘yxatdan o‘tishda xatolik ❌");
     }
   };
 
   return (
-    <div className="p-4 max-w-md mx-auto mt-20">
-      <h2 className="text-2xl font-bold mb-4">Register</h2>
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        className="border p-2 w-full mb-2 rounded"
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        className="border p-2 w-full mb-2 rounded"
-      />
-      <button
-        onClick={handleRegister}
-        className="bg-green-500 text-white p-2 rounded w-full"
-      >
-        Register
-      </button>
-      {error && <p className="text-red-500 mt-2">{error}</p>}
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <div className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-md">
+        <h2 className="text-3xl font-bold text-center mb-6 text-gray-800">
+          Register
+        </h2>
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={e => setEmail(e.target.value)}
+          className="border border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 outline-none p-3 w-full mb-4 rounded-lg"
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={e => setPassword(e.target.value)}
+          className="border border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 outline-none p-3 w-full mb-4 rounded-lg"
+        />
+        <button
+          onClick={handleRegister}
+          className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-lg transition"
+        >
+          Register
+        </button>
+        {error && (
+          <p className="text-red-500 text-center mt-3">{error}</p>
+        )}
+        <p className="mt-6 text-sm text-center text-gray-600">
+          Allaqachon akkauntingiz bormi?{" "}
+          <Link href="/LoginPage" className="text-blue-600 hover:underline">
+            Login
+          </Link>
+        </p>
+      </div>
     </div>
   );
 }
