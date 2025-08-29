@@ -10,14 +10,14 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const storedToken = localStorage.getItem('token');
-
-    if (storedToken) {
-      router.push('/Movies');  
+   const token = localStorage.getItem("token")
+    if(!token){
+      router.push("/LoginPage")
     } else {
       setLoading(false);         
     }
   }, [router]);
+
 
   if (loading) {
     return <Spinder/>
