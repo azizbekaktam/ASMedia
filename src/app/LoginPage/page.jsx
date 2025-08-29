@@ -16,10 +16,8 @@ export default function LoginPage() {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      // 🔑 Firebase token olish
       const token = await user.getIdToken();
 
-      // LocalStorage ga saqlash
       localStorage.setItem("token", token);
 
       router.push("/Movies");

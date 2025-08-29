@@ -2,26 +2,27 @@
 
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import LoginPage from './LoginPage/page';
 import Spinder from './components/Spinder';
+import MoviesPage from './Movies/page';
 
 export default function Home() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-   const token = localStorage.getItem("token")
-    if(!token){
-      router.push("/LoginPage")
+    const token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/LoginPage");
     } else {
-      setLoading(false);         
+      setLoading(false);
     }
   }, [router]);
 
-
   if (loading) {
-    return <Spinder/>
+    return <Spinder />;
   }
 
-  return <LoginPage />; 
+  return (
+<MoviesPage/>
+  );
 }
