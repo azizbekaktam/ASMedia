@@ -1,67 +1,46 @@
 "use client";
-import Link from "next/link";
 import { useState } from "react";
+import { auth } from "../../firebase";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { useRouter, Link } from "next/navigation";
 
-export default function Register() {
-  const [username, setUsername] = useState("");
+export default function RegisterPage() {
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
+  const router = useRouter();
 
-  const handleRegister = () => {
-    if (!username || !password) {
-      setMessage("Iltimos, barcha maydonlarni to‘ldiring!");
-      return;
+  const handleRegister = async () => {
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+      router.push("/LoginPage"); // Ro‘yxatdan o‘tganidan keyin login sahifasiga yo‘naltirish
+    } catch (err) {
+      setError(err.message);
     }
-
-    setMessage(`✅ ${username} muvaffaqiyatli ro'yxatdan o'tdi!`);
-    setUsername("");
-    setPassword("");
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-green-100">
-      <div className="bg-white shadow-lg rounded-xl p-8 w-full max-w-md">
-        <h1 className="text-3xl font-bold mb-6 text-center text-green-700">
-          Ro'yxatdan o'tish
-        </h1>
-
-        <input
-          type="text"
-          placeholder="Username"
-          className="w-full p-3 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-
-        <input
-          type="password"
-          placeholder="Password"
-          className="w-full p-3 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-
-        <button
-          onClick={handleRegister}
-          className="w-full bg-green-500 text-white py-3 rounded-lg hover:bg-green-600 transition"
-        >
-          Ro'yxatdan o'tish
-        </button>
-
-        {message && (
-          <p className="mt-4 text-center text-sm text-green-700">{message}</p>
-        )}
-
-        <p className="mt-6 text-center text-green-600">
-          Allaqachon hisobingiz bormi?{" "}
-          <Link
-            href="/LoginPage"
-            className="underline font-semibold hover:text-green-800"
-          >
-            Kirish
-          </Link>
-        </p>
-      </div>
+    <div className="p-4 max-w-md mx-auto mt-20">
+      <h2 className="text-2xl font-bold mb-4">Register</h2>
+      <input
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={e => setEmail(e.target.value)}
+        className="border p-2 w-full mb-2 rounded"
+      />
+      <input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={e => setPassword(e.target.value)}
+        className="border p-2 w-full mb-2 rounded"
+      />
+      <button onClick={handleRegister} className="bg-green-500 text-white p-2 rounded w-full">Register</button>
+      {error && <p className="text-red-500 mt-2">{error}</p>}
+      <p className="mt-4 text-sm">
+        Allaqachon hisobingiz bormi? <Link href="/LoginPage" className="text-blue-600 underline">Login</Link>
+      </p>
     </div>
   );
 }
