@@ -12,9 +12,9 @@ export default function Home() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
-      router.push("/LoginPage");
+      router.push("/LoginPage"); // login bo‘lmasa login pagega yo‘naltiradi
     } else {
-      setLoading(false);
+      setLoading(false); // token bor bo‘lsa asosiy sahifa ochiladi
     }
   }, [router]);
 
