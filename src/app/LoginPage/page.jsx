@@ -13,7 +13,15 @@ export default function LoginPage() {
 
   const handleLogin = async () => {
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      // 🔑 Firebase token olish
+      const token = await user.getIdToken();
+
+      // LocalStorage ga saqlash
+      localStorage.setItem("token", token);
+
       router.push("/Movies");
     } catch (err) {
       setError("Email yoki parol noto‘g‘ri ❌");
