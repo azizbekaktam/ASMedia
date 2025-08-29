@@ -1,5 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -18,6 +20,13 @@ export const metadata = {
 
 
 export default function RootLayout({ children }) {
+  const router= useRouter()
+  useEffect(()=>{
+    const token = localStorage.getItem("token")
+    if(!token){
+      router.push("/LoginPage")
+    }
+  })
   return (
     <html lang="en" >
       <body
