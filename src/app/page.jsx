@@ -8,13 +8,16 @@ import MoviesPage from './Movies/page';
 export default function Home() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
+  const [isAuth, setIsAuth] = useState(false); // token bormi yo‘qmi
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+
     if (!token) {
-      router.push("/LoginPage"); // login bo‘lmasa login pagega yo‘naltiradi
+      router.replace("/LoginPage"); // push emas replace ishlat
     } else {
-      setLoading(false); // token bor bo‘lsa asosiy sahifa ochiladi
+      setIsAuth(true);
+      setLoading(false);
     }
   }, [router]);
 
@@ -22,7 +25,11 @@ export default function Home() {
     return <Spinder />;
   }
 
+  if (!isAuth) {
+    return null; // redirect bo‘lguncha hech narsa ko‘rinmasin
+  }
+
   return (
-<MoviesPage/>
+  <MoviesPage/>
   );
 }
