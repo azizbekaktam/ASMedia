@@ -3,7 +3,6 @@ import { useState } from "react";
 import { auth } from "../../../firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useRouter } from "next/navigation";
-import Link from "next/link"; // ✅ To‘g‘ri import
 
 export default function RegisterPage() {
   const [email, setEmail] = useState("");
@@ -14,7 +13,7 @@ export default function RegisterPage() {
   const handleRegister = async () => {
     try {
       await createUserWithEmailAndPassword(auth, email, password);
-      router.push("/LoginPage"); // Ro‘yxatdan o‘tganidan keyin login sahifasiga yo‘naltirish
+      router.push("/LoginPage"); // Registratsiya bo‘lgandan keyin login sahifaga yuboradi
     } catch (err) {
       setError(err.message);
     }
@@ -27,21 +26,23 @@ export default function RegisterPage() {
         type="email"
         placeholder="Email"
         value={email}
-        onChange={e => setEmail(e.target.value)}
+        onChange={(e) => setEmail(e.target.value)}
         className="border p-2 w-full mb-2 rounded"
       />
       <input
         type="password"
         placeholder="Password"
         value={password}
-        onChange={e => setPassword(e.target.value)}
+        onChange={(e) => setPassword(e.target.value)}
         className="border p-2 w-full mb-2 rounded"
       />
-      <button onClick={handleRegister} className="bg-green-500 text-white p-2 rounded w-full">Register</button>
+      <button
+        onClick={handleRegister}
+        className="bg-green-500 text-white p-2 rounded w-full"
+      >
+        Register
+      </button>
       {error && <p className="text-red-500 mt-2">{error}</p>}
-      <p className="mt-4 text-sm">
-        Allaqachon hisobingiz bormi? <Link href="/LoginPage" className="text-blue-600 underline">Login</Link>
-      </p>
     </div>
   );
 }
