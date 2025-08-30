@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { auth, db } from "@/firebase";
+import { auth, db } from "../../../firebase";
 import { getDocs, collection, deleteDoc, doc } from "firebase/firestore";
 import Spinder from "@/app/components/Spinder";
 
