@@ -15,15 +15,11 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-
-// Exportlar
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 
-// Agar analytics kerak bo‘lsa, faqat clientda chaqiramiz:
 export let analytics;
 if (typeof window !== "undefined") {
-  // dynamic import qilamiz
   import("firebase/analytics").then(({ getAnalytics }) => {
     analytics = getAnalytics(app);
   });
