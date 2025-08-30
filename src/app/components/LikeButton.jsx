@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { auth, db } from "@/firebase";
+import { auth, db } from "../../../firebase";
 import { doc, setDoc, getDocs, collection, deleteDoc } from "firebase/firestore";
 
 export default function LikeButton({ movie }) {
