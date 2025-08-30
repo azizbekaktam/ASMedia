@@ -2,7 +2,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
-// import { getAnalytics } from "firebase/analytics"; ❌ bu build vaqtida xato beradi
 
 const firebaseConfig = {
   apiKey: "AIzaSyBvCqdbIIlIDUHc-F6KivKT3CXufxcVGeM",
@@ -24,4 +23,3 @@ if (typeof window !== "undefined") {
     analytics = getAnalytics(app);
   });
 }
-
