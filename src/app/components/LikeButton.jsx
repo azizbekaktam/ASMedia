@@ -1,44 +1,31 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { auth, db } from "../../../firebase"; // to‘g‘ri pathni tekshiring
-import { doc, setDoc, getDocs, collection, deleteDoc } from "firebase/firestore";
 
-export default function LikeButton({ movie }) {
+export default function LikeButton({ item, token }) {
   const [inCart, setInCart] = useState(false);
 
   useEffect(() => {
-    async function checkCart() {
-      const user = auth.currentUser;
-      if (!user) return;
-      try {
-        const cartSnapshot = await getDocs(collection(db, "users", user.uid, "cart"));
-        const exists = cartSnapshot.docs.some(doc => doc.id === movie.id.toString());
-        setInCart(exists);
-      } catch (error) {
-        console.error("Firestore read error:", error);
-      }
-    }
-    checkCart();
-  }, [movie]);
+    if (!token) return;
+    const userCartKey = `cart_${token}`;
+    const cart = JSON.parse(localStorage.getItem(userCartKey)) || [];
+    const exists = cart.some(el => el.id === item.id && el.type === item.type);
+    setInCart(exists);
+  }, [item, token]);
 
-  const handleClick = async () => {
-    const user = auth.currentUser;
-    if (!user) return alert("Iltimos, avval login qiling!");
+  const handleClick = () => {
+    if (!token) return alert("Iltimos, avval login qiling!");
+    const userCartKey = `cart_${token}`;
+    const cart = JSON.parse(localStorage.getItem(userCartKey)) || [];
 
-    const docRef = doc(db, "users", user.uid, "cart", movie.id.toString());
-
-    try {
-      if (inCart) {
-        await deleteDoc(docRef);
-        setInCart(false);
-      } else {
-        await setDoc(docRef, movie);
-        setInCart(true);
-      }
-    } catch (error) {
-      console.error("Firestore write error:", error);
-      alert("Ma’lumot saqlashda xatolik yuz berdi. Internetni tekshiring.");
+    if (inCart) {
+      const newCart = cart.filter(el => !(el.id === item.id && el.type === item.type));
+      localStorage.setItem(userCartKey, JSON.stringify(newCart));
+      setInCart(false);
+    } else {
+      cart.push(item);
+      localStorage.setItem(userCartKey, JSON.stringify(cart));
+      setInCart(true);
     }
   };
 
