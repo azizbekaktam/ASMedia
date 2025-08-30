@@ -1,66 +1,62 @@
 "use client";
+
 import { useState } from "react";
-import { auth } from "../../../firebase";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
+import { app } from "../../../firebase"; // firebase config joyi
+
+const auth = getAuth(app);
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
   const router = useRouter();
 
-  const handleLogin = async () => {
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      const token = await user.getIdToken();
-
-      localStorage.setItem("token", token);
-
-      router.push("/Movies");
-    } catch (err) {
-      setError("Email yoki parol noto‘g‘ri ❌");
+      if (user.emailVerified) {
+        localStorage.setItem("token", await user.getIdToken());
+        router.push("/"); // Home sahifaga o‘tadi
+      } else {
+        setMessage("Emailingiz tasdiqlanmagan! Iltimos, emailni tekshiring.");
+      }
+    } catch (error) {
+      setMessage(error.message);
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-md">
-        <h2 className="text-3xl font-bold text-center mb-6 text-gray-800">
-          Login
-        </h2>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={e => setEmail(e.target.value)}
-          className="border border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 outline-none p-3 w-full mb-4 rounded-lg"
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={e => setPassword(e.target.value)}
-          className="border border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 outline-none p-3 w-full mb-4 rounded-lg"
-        />
-        <button
-          onClick={handleLogin}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition"
-        >
-          Login
-        </button>
-        {error && (
-          <p className="text-red-500 text-center mt-3">{error}</p>
-        )}
-        <p className="mt-6 text-sm text-center text-gray-600">
-          Hali ro‘yxatdan o‘tmaganmisiz?{" "}
-          <Link href="/RegPage" className="text-blue-600 hover:underline">
-            Register
-          </Link>
-        </p>
+    <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
+      <div className="bg-white p-6 rounded-2xl shadow-lg w-96">
+        <h2 className="text-2xl font-bold mb-4 text-center">Login</h2>
+        <form onSubmit={handleLogin} className="flex flex-col gap-3">
+          <input
+            type="email"
+            placeholder="Email"
+            className="border p-2 rounded-lg"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            className="border p-2 rounded-lg"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <button type="submit" className="bg-green-600 text-white py-2 rounded-lg hover:bg-green-700">
+            Login
+          </button>
+        </form>
+        {message && <p className="text-center mt-3 text-sm text-red-500">{message}</p>}
       </div>
     </div>
   );

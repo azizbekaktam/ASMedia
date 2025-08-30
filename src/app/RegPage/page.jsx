@@ -1,61 +1,57 @@
 "use client";
-import { useState } from "react";
-import { auth } from "../../../firebase";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
 
-export default function RegPage() {
+import { useState } from "react";
+import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
+import { app } from "../../../firebase"; // firebase config joyi
+
+const auth = getAuth(app);
+
+export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const router = useRouter();
+  const [message, setMessage] = useState("");
 
-  const handleRegister = async () => {
+  const handleRegister = async (e) => {
+    e.preventDefault();
+
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      router.push("/Movies");
-    } catch (err) {
-      setError("Ro‘yxatdan o‘tishda xatolik ❌");
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      await sendEmailVerification(userCredential.user);
+      setMessage("Ro‘yxatdan o‘tdingiz! Emailingizni tasdiqlang.");
+    } catch (error) {
+      setMessage(error.message);
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-md">
-        <h2 className="text-3xl font-bold text-center mb-6 text-gray-800">
-          Register
-        </h2>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={e => setEmail(e.target.value)}
-          className="border border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 outline-none p-3 w-full mb-4 rounded-lg"
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={e => setPassword(e.target.value)}
-          className="border border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 outline-none p-3 w-full mb-4 rounded-lg"
-        />
-        <button
-          onClick={handleRegister}
-          className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-lg transition"
-        >
-          Register
-        </button>
-        {error && (
-          <p className="text-red-500 text-center mt-3">{error}</p>
-        )}
-        <p className="mt-6 text-sm text-center text-gray-600">
-          Allaqachon akkauntingiz bormi?{" "}
-          <Link href="/LoginPage" className="text-blue-600 hover:underline">
-            Login
-          </Link>
-        </p>
+    <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
+      <div className="bg-white p-6 rounded-2xl shadow-lg w-96">
+        <h2 className="text-2xl font-bold mb-4 text-center">Register</h2>
+        <form onSubmit={handleRegister} className="flex flex-col gap-3">
+          <input
+            type="email"
+            placeholder="Email"
+            className="border p-2 rounded-lg"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            className="border p-2 rounded-lg"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <button type="submit" className="bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">
+            Register
+          </button>
+        </form>
+        {message && <p className="text-center mt-3 text-sm text-red-500">{message}</p>}
       </div>
     </div>
   );
 }
+
+
