@@ -1,63 +1,58 @@
 "use client";
-
 import { useState } from "react";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { app } from "../firebase"; // firebase.js faylidan import qilamiz
 import { useRouter } from "next/navigation";
-import { app } from "../../../firebase"; // firebase config joyi
-
-const auth = getAuth(app);
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
   const router = useRouter();
+  const auth = getAuth(app);
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-
-      if (user.emailVerified) {
-        localStorage.setItem("token", await user.getIdToken());
-        router.push("/"); // Home sahifaga o‘tadi
-      } else {
-        setMessage("Emailingiz tasdiqlanmagan! Iltimos, emailni tekshiring.");
+      const userCred = await signInWithEmailAndPassword(auth, email, password);
+      if (!userCred.user.emailVerified) {
+        alert("Email tasdiqlanmagan! Iltimos email pochtangizni tekshiring.");
+        return;
       }
-    } catch (error) {
-      setMessage(error.message);
+      localStorage.setItem("token", await userCred.user.getIdToken());
+      router.push("/"); // Home sahifaga yuboradi
+    } catch (err) {
+      alert("Xato: " + err.message);
     }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
-      <div className="bg-white p-6 rounded-2xl shadow-lg w-96">
-        <h2 className="text-2xl font-bold mb-4 text-center">Login</h2>
-        <form onSubmit={handleLogin} className="flex flex-col gap-3">
-          <input
-            type="email"
-            placeholder="Email"
-            className="border p-2 rounded-lg"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            className="border p-2 rounded-lg"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-          <button type="submit" className="bg-green-600 text-white py-2 rounded-lg hover:bg-green-700">
-            Login
-          </button>
-        </form>
-        {message && <p className="text-center mt-3 text-sm text-red-500">{message}</p>}
-      </div>
+    <div className="flex items-center justify-center h-screen bg-gray-100">
+      <form
+        onSubmit={handleLogin}
+        className="bg-white p-8 rounded-2xl shadow-lg w-96"
+      >
+        <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
+        <input
+          type="email"
+          placeholder="Email"
+          className="w-full p-2 mb-4 border rounded-lg"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <input
+          type="password"
+          placeholder="Parol"
+          className="w-full p-2 mb-4 border rounded-lg"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <button
+          type="submit"
+          className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600"
+        >
+          Kirish
+        </button>
+      </form>
     </div>
   );
 }
