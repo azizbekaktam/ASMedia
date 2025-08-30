@@ -56,7 +56,7 @@ export default function CartoonDetail({ token }) {
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-10 mt-10">
         <div className="flex-shrink-0">
           <img
-            src={`${process.env.NEXT_PUBLIC_Project_TmdApi_Api_Img}/t/p/w500${poster_path}`}
+            src={`${process.env.NEXT_PUBLIC_Project_TmdApi_Api_Img}${poster_path}`}
             alt={title}
             className="rounded-2xl shadow-xl w-full md:w-[320px] object-cover transition-transform duration-300 hover:scale-105"
           />

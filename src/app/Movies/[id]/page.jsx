@@ -43,7 +43,7 @@ export default function MovieDetail({ token }) {
       <BackButton />
       <div className="max-w-5xl mx-auto flex flex-col md:flex-row gap-8 mt-6">
         <img
-          src={`${process.env.NEXT_PUBLIC_Project_TmdApi_Api_Img}/t/p/w500${poster_path}`}
+          src={`${process.env.NEXT_PUBLIC_Project_TmdApi_Api_Img}${poster_path}`}
           alt={title}
           className="rounded-lg shadow-lg w-full md:w-[300px] object-cover"
         />
