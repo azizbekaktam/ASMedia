@@ -93,7 +93,7 @@ import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 
 // 🔥 firebase
-import { db, auth } from "../../../firebase";
+import { db, auth } from "@/firebase";
 import { doc, setDoc } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 
