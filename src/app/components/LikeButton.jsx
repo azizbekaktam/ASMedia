@@ -38,7 +38,7 @@ export default function LikeButton({ movie }) {
         inCart ? "bg-red-500 hover:bg-red-600 text-white" : "bg-green-500 hover:bg-green-600 text-white"
       }`}
     >
-      {inCart ? "❌ Savatdan o‘chirish" : "❤️ Savatga qo‘shish"}
+      {inCart ? "❌ Savatdan o‘chirish" : "❤️ Savatga qo‘shishd"}
     </button>
   );
 }
