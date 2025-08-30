@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { app } from "../firebase"; // firebase.js faylidan import qilamiz
+import { app } from "../../../firebase"; // firebase.js faylidan import qilamiz
 import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
