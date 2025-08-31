@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import { auth, db } from "../../../firebase";
 import { doc, onSnapshot, setDoc, deleteDoc } from "firebase/firestore";
+import { FaHeart, FaRegHeart } from "react-icons/fa"; 
 
 export default function LikeButton({ movie }) {
   const [liked, setLiked] = useState(false);
   const [user, setUser] = useState(null);
 
-  // Login holatini real-time kuzatish
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((currentUser) => {
       setUser(currentUser);
@@ -19,7 +19,6 @@ export default function LikeButton({ movie }) {
 
     const ref = doc(db, "users", user.uid, "likes", String(movie.id));
 
-    // Real-time liked state
     const unsubscribe = onSnapshot(ref, (docSnap) => {
       setLiked(docSnap.exists());
     });
@@ -54,7 +53,8 @@ export default function LikeButton({ movie }) {
         liked ? "bg-red-500 text-white" : "bg-gray-200"
       }`}
     >
-      {liked ? "❤️ Liked" : "🤍 Like"}
+      {liked ? <FaHeart /> : <FaRegHeart />}
+      {liked ? "Liked" : "Like"}
     </button>
   );
 }

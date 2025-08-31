@@ -1,19 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Search from "./Search";
 import LogOut from "./LogOut";
 import Link from "next/link";
 
 export default function Navbar() {
-  const [username, setUsername] = useState("");
-
-  useEffect(() => {
-    const storedUsername = localStorage.getItem("username");
-    if (storedUsername) {
-      setUsername(storedUsername);
-    }
-  }, []);
   return (
     <nav
       className="flex items-center justify-between 

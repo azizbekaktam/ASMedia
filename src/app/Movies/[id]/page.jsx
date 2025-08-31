@@ -6,6 +6,7 @@ import LikeButton from "@/app/components/LikeButton";
 import axios from "axios";
 import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
+import { FaStar } from "react-icons/fa";
 
 export default function MovieDetail({ token }) {
   const { id } = useParams();
@@ -51,7 +52,7 @@ export default function MovieDetail({ token }) {
           <h1 className="text-3xl font-bold">{title}</h1>
           <p className="text-gray-600 dark:text-gray-400">{release_date}</p>
           <p className="mt-4 leading-relaxed">{overview}</p>
-          <p className="mt-4 text-yellow-500 font-semibold">⭐ Rating: {vote_average} / 10</p>
+          <p className="mt-4 text-yellow-500 font-semibold"><FaStar/> Rating: {vote_average} / 10</p>
 
           <LikeButton movie={movie} token={token} />
 

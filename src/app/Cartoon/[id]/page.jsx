@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import BackButton from "@/app/components/BackButton";
 import Spinder from "@/app/components/Spinder";
 import LikeButton from "@/app/components/LikeButton";
+import { FaStar } from "react-icons/fa";
 
 export default function CartoonDetail({ token }) {
   const { id } = useParams();
@@ -68,7 +69,7 @@ export default function CartoonDetail({ token }) {
           <p className="mt-6 text-gray-700 leading-relaxed text-lg">{overview}</p>
 
           <div className="mt-6 flex items-center gap-2">
-            <span className="text-yellow-500 text-2xl">⭐</span>
+            <span className="text-yellow-500 text-2xl"><FaStar/></span>
             <span className="text-lg font-semibold text-gray-800">{vote_average} / 10</span>
           </div>
 

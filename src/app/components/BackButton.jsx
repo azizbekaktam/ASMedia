@@ -1,5 +1,6 @@
 "use client";
 import { useRouter, useSearchParams } from "next/navigation";
+import { HiArrowLeft } from "react-icons/hi";
 
 export default function BackButton() {
   const router = useRouter();
@@ -25,7 +26,7 @@ export default function BackButton() {
              dark:text-white dark:hover:from-gray-600 dark:hover:to-gray-700
              transition-all shadow-sm hover:shadow-md"
 >
-  ⬅ Orqaga
+<HiArrowLeft />
 </button>
 
 

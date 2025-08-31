@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Spinder from "./Spinder";
+import { HiArrowCircleRight } from "react-icons/hi";
 
 export default function Slider() {
   const [movies, setMovies] = useState([]);
@@ -59,7 +60,8 @@ export default function Slider() {
                text-white p-3 rounded-full 
                backdrop-blur-sm transition-all shadow-md"
   >
-    ◀
+        <HiArrowCircleLeft />
+
   </button>
 
   <button
@@ -69,7 +71,8 @@ export default function Slider() {
                text-white p-3 rounded-full 
                backdrop-blur-sm transition-all shadow-md"
   >
-    ▶
+            <HiArrowCircleRight />
+
   </button>
 
   <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-2">

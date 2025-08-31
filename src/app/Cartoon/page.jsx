@@ -6,6 +6,8 @@ import Link from "next/link";
 import Navbar from "../components/Navbar";
 import CartoonSlider from "../components/CartoonSlider";
 import Spinder from "../components/Spinder";
+import { HiOutlineChevronDoubleLeft, HiOutlineChevronDoubleRight } from "react-icons/hi";
+import { FaRegCalendarAlt, FaRegLaughBeam } from "react-icons/fa";
 
 export default function CartoonsPage() {
   const router = useRouter();
@@ -51,7 +53,7 @@ export default function CartoonsPage() {
       <CartoonSlider />
 
       <h1 className="text-center text-3xl font-bold mb-10">
-        🎬 Multfilmlar ({page}/{totalPages})
+        <FaRegLaughBeam /> Multfilmlar ({page}/{totalPages})
       </h1>
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
@@ -64,7 +66,7 @@ export default function CartoonsPage() {
             />
             <div className="p-2">
               <h2 className="font-semibold truncate">{c.title}</h2>
-              <p className="text-sm text-gray-500">📅 {c.release_date}</p>
+              <p className="text-sm text-gray-500"><FaRegCalendarAlt/> {c.release_date}</p>
             </div>
           </Link>
         ))}
@@ -72,11 +74,11 @@ export default function CartoonsPage() {
 
       <div className="flex justify-center items-center gap-4 mt-8">
         <button onClick={prevPage} disabled={page === 1} className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50">
-          ◀ Oldingi
+<HiOutlineChevronDoubleLeft />
         </button>
         <span>{page} / {totalPages}</span>
         <button onClick={nextPage} disabled={page === totalPages} className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50">
-          Keyingi ▶
+<HiOutlineChevronDoubleRight />
         </button>
       </div>
     </main>

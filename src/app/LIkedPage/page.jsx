@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { auth, db } from "../../../firebase";
 import { collection, getDocs, doc, setDoc, deleteDoc, getDoc } from "firebase/firestore";
 import Spinder from "../components/Spinder";
+import { FaRegHeart } from "react-icons/fa";
 
 export default function LikesPage() {
   const [likes, setLikes] = useState([]);
@@ -33,7 +34,7 @@ export default function LikesPage() {
 
   return (
     <div className="p-4">
-      <h1 className="text-xl font-bold mb-4">❤️ My Liked Movies</h1>
+      <h1 className="text-xl font-bold mb-4"><FaRegHeart /> My Liked Movies</h1>
       {likes.length === 0 ? (
         <p>Hech qanday like qilingan kino yo‘q</p>
       ) : (

@@ -6,6 +6,9 @@ import Link from "next/link";
 import Navbar from "../components/Navbar";
 import Spinder from "../components/Spinder";
 import Slider from "../components/Slider";
+import { HiOutlineChevronDoubleLeft, HiOutlineChevronDoubleRight } from "react-icons/hi";
+import { FaRegCalendarAlt } from "react-icons/fa";
+import { MdMovie } from "react-icons/md";
 
 export default function MoviesPage() {
   const router = useRouter();
@@ -62,7 +65,7 @@ export default function MoviesPage() {
       <Navbar />
 <Slider/>
       <h1 className="text-center text-3xl font-bold mb-10">
-        🎬 Kinolar ({page}/{totalPages})
+        <MdMovie /> Kinolar ({page}/{totalPages})
       </h1>
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
@@ -79,7 +82,7 @@ export default function MoviesPage() {
             />
             <div className="p-2">
               <h2 className="font-semibold truncate">{m.title}</h2>
-              <p className="text-sm text-gray-500">📅 {m.release_date}</p>
+              <p className="text-sm text-gray-500"><FaRegCalendarAlt /> {m.release_date}</p>
             </div>
           </Link>
         ))}
@@ -91,7 +94,7 @@ export default function MoviesPage() {
           disabled={page === 1}
           className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
         >
-          ◀ Oldingi
+<HiOutlineChevronDoubleLeft />
         </button>
         <span>
           {page} / {totalPages}
@@ -101,7 +104,7 @@ export default function MoviesPage() {
           disabled={page === totalPages}
           className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
         >
-          Keyingi ▶
+<HiOutlineChevronDoubleRight />
         </button>
       </div>
     </main>
