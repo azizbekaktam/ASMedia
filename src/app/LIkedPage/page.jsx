@@ -1,86 +1,83 @@
 "use client";
+
 import { useEffect, useState } from "react";
 
-const API_URL = process.env.NEXT_PUBLIC_Project_TmdApi_Api;
-const API_KEY = process.env.NEXT_PUBLIC_Project_TmdApi_Api_Key;
-
-const getAppData = () => {
-  const data = localStorage.getItem("asmedia.local");
-  return data ? JSON.parse(data) : { token: null, likedItems: [] };
+// LocalStorage helper funksiyalar
+const getData = (key) => {
+  if (typeof window !== "undefined") {
+    const data = localStorage.getItem(key);
+    return data ? JSON.parse(data) : null;
+  }
+  return null;
 };
 
-const saveAppData = (data) => {
-  localStorage.setItem("asmedia.local", JSON.stringify(data));
+const saveData = (key, value) => {
+  if (typeof window !== "undefined") {
+    localStorage.setItem(key, JSON.stringify(value));
+  }
 };
 
 export default function LikedPage() {
-  const [likedMovies, setLikedMovies] = useState([]);
   const [token, setToken] = useState(null);
+  const [likedItems, setLikedItems] = useState([]);
 
+  // sahifa ochilganda localStorage dan malumotlarni olish
   useEffect(() => {
-    const data = getAppData();
+    const storedToken = getData("token");
+    const storedItems = getData("likedItems") || [];
 
-    // tokenni saqlab qo‘yamiz
-    if (!data.token) {
-      data.token = "my-auto-token";
-      saveAppData(data);
-    }
-
-    setToken(data.token);
-    fetchLikedMovies(data.likedItems);
+    setToken(storedToken);
+    setLikedItems(storedItems);
   }, []);
 
-  const fetchLikedMovies = async (ids) => {
-    if (!ids.length) return;
-
-    const responses = await Promise.all(
-      ids.map((id) =>
-        fetch(`${API_URL}/movie/${id}?api_key=${API_KEY}&language=en-US`)
-          .then((res) => res.json())
-      )
-    );
-
-    setLikedMovies(responses);
-  };
-
-  const removeLike = (id) => {
-    const data = getAppData();
-    const updated = data.likedItems.filter((item) => item !== id);
-    data.likedItems = updated;
-    saveAppData(data);
-    setLikedMovies(likedMovies.filter((movie) => movie.id !== id));
+  // Like qo‘shish yoki o‘chirish
+  const toggleLike = (item) => {
+    let updatedItems;
+    if (likedItems.some((i) => i.id === item.id)) {
+      // agar bor bo‘lsa o‘chiramiz
+      updatedItems = likedItems.filter((i) => i.id !== item.id);
+    } else {
+      // agar yo‘q bo‘lsa qo‘shamiz
+      updatedItems = [...likedItems, item];
+    }
+    setLikedItems(updatedItems);
+    saveData("likedItems", updatedItems);
   };
 
   return (
-    <div>
-      <h1>❤️ Liked Movies</h1>
-      <p><strong>Token:</strong> {token}</p>
+    <div style={{ padding: "20px" }}>
+      <h1>Liked Page</h1>
 
-      {likedMovies.length > 0 ? (
-        <ul>
-          {likedMovies.map((movie) => (
-            <li key={movie.id} style={{ marginBottom: "15px" }}>
-              <img
-                src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
-                alt={movie.title}
-                width={100}
-              />
-              <div>
-                <strong>{movie.title}</strong> ({movie.release_date})
-                <p>{movie.overview?.slice(0, 100)}...</p>
-                <button
-                  onClick={() => removeLike(movie.id)}
-                  style={{ marginTop: "5px" }}
-                >
-                  ❌ Remove
-                </button>
-              </div>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>Liked movies yo‘q</p>
-      )}
+      {/* Token chiqarish */}
+      <div style={{ marginBottom: "20px" }}>
+        <strong>Token:</strong> {token || "Token topilmadi"}
+      </div>
+
+      {/* Liked items ro‘yxati */}
+      <div>
+        <h2>Saved Items:</h2>
+        {likedItems.length === 0 ? (
+          <p>Hech narsa yo‘q</p>
+        ) : (
+          <ul>
+            {likedItems.map((item) => (
+              <li key={item.id} style={{ marginBottom: "10px" }}>
+                {item.title || item.name}{" "}
+                <button onClick={() => toggleLike(item)}>Remove</button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
+      {/* Test uchun qo‘lda item qo‘shish */}
+      <button
+        onClick={() =>
+          toggleLike({ id: 1, title: "Test Movie", name: "Test Name" })
+        }
+      >
+        Test Like
+      </button>
     </div>
   );
 }
