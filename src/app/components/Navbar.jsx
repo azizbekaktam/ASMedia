@@ -11,11 +11,13 @@ export default function Navbar() {
 
   return (
     <nav className="bg-white dark:bg-gray-900 text-gray-900 dark:text-white px-6 py-3 shadow-lg relative flex items-center justify-between">
-      
+
+      {/* Logo */}
       <div className="font-extrabold text-xl tracking-wide text-yellow-500">
         As<span className="text-gray-900 dark:text-white">Media</span>
       </div>
 
+      {/* Desktop Menu */}
       <ul className="hidden md:flex gap-6 font-medium items-center">
         <Link href="/" className="group relative">
           <li className="cursor-pointer hover:text-yellow-500 dark:hover:text-yellow-400 transition-colors">
@@ -39,9 +41,14 @@ export default function Navbar() {
         </Link>
       </ul>
 
+      {/* Search + Right */}
       <div className="flex items-center gap-4">
-        <Search />
+        {/* Search bar responsive */}
+        <div className="w-32 sm:w-40 md:w-64">
+          <Search />
+        </div>
 
+        {/* Desktop Right */}
         <div className="hidden md:flex items-center gap-4">
           <div className="w-9 h-9 rounded-full bg-gradient-to-r from-yellow-400 to-yellow-500 flex items-center justify-center text-black font-bold text-sm shadow-md">
             <Link href="/LikedPage">Liked</Link>
@@ -49,6 +56,7 @@ export default function Navbar() {
           <LogOut />
         </div>
 
+        {/* Mobile Hamburger */}
         <button
           className="md:hidden text-gray-900 dark:text-white"
           onClick={() => setMenuOpen(!menuOpen)}
@@ -57,6 +65,7 @@ export default function Navbar() {
         </button>
       </div>
 
+      {/* Mobile Menu */}
       <div
         className={`absolute top-0 left-0 w-full h-screen bg-white dark:bg-gray-900 z-50 flex flex-col items-center justify-center gap-6 transition-transform duration-300 ${
           menuOpen ? "translate-y-0" : "-translate-y-full"
