@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Spinder from "./Spinder";
-import { HiArrowCircleRight } from "react-icons/hi";
+import { HiArrowCircleRight, HiArrowCircleLeft } from "react-icons/hi";
 
 export default function CartoonSlider() {
   const [cartoons, setCartoons] = useState([]);
