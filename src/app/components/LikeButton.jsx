@@ -1,7 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
 
-// LocalStorage helperlari
 const saveAppData = (data) => {
   localStorage.setItem("asmedia.local", JSON.stringify(data));
 };
@@ -22,21 +21,21 @@ const getLikedItems = () => {
   return data.likedItems || [];
 };
 
-export default function LikeButton({ itemId }) {
+export default function LikeButton({ movieId }) {
   const [liked, setLiked] = useState(false);
 
   useEffect(() => {
     const items = getLikedItems();
-    setLiked(items.includes(itemId));
-  }, [itemId]);
+    setLiked(items.includes(movieId));
+  }, [movieId]);
 
   const toggleLike = () => {
     let items = getLikedItems();
-    if (items.includes(itemId)) {
-      items = items.filter((id) => id !== itemId);
+    if (items.includes(movieId)) {
+      items = items.filter((id) => id !== movieId);
       setLiked(false);
     } else {
-      items.push(itemId);
+      items.push(movieId);
       setLiked(true);
     }
     saveLikedItems(items);
@@ -52,7 +51,7 @@ export default function LikeButton({ itemId }) {
         background: liked ? "red" : "white",
         color: liked ? "white" : "black",
         cursor: "pointer",
-        margin: "5px"
+        margin: "5px",
       }}
     >
       {liked ? "❤️ Liked" : "🤍 Like"}
