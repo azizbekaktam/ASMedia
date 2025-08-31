@@ -1,27 +1,25 @@
-"use client";
-
 import { useState, useEffect } from "react";
 import { auth, db } from "../../../firebase";
-import { doc, setDoc, deleteDoc, getDoc } from "firebase/firestore";
+import { doc, onSnapshot, setDoc, deleteDoc } from "firebase/firestore";
 
 export default function LikeButton({ movie }) {
   const [liked, setLiked] = useState(false);
+  const user = auth.currentUser;
 
   useEffect(() => {
-    const user = auth.currentUser;
     if (!user) return;
 
-    const checkLike = async () => {
-      const ref = doc(db, "users", user.uid, "likes", String(movie.id));
-      const snap = await getDoc(ref);
-      setLiked(snap.exists());
-    };
+    const ref = doc(db, "users", user.uid, "likes", String(movie.id));
+    
+    // Real-time snapshot
+    const unsubscribe = onSnapshot(ref, (docSnap) => {
+      setLiked(docSnap.exists());
+    });
 
-    checkLike();
-  }, [movie.id]);
+    return () => unsubscribe();
+  }, [user, movie.id]);
 
   const toggleLike = async () => {
-    const user = auth.currentUser;
     if (!user) {
       alert("Avval login qiling!");
       return;
@@ -31,7 +29,6 @@ export default function LikeButton({ movie }) {
 
     if (liked) {
       await deleteDoc(ref);
-      setLiked(false);
     } else {
       await setDoc(ref, {
         id: movie.id,
@@ -39,7 +36,6 @@ export default function LikeButton({ movie }) {
         poster_path: movie.poster_path,
         release_date: movie.release_date,
       });
-      setLiked(true);
     }
   };
 
