@@ -1,59 +1,30 @@
 "use client";
-import { useState, useEffect } from "react";
 
-const getAppData = () => {
-  const data = localStorage.getItem("asmedia.local");
-  if (data) {
-    const parsed = JSON.parse(data);
-    return {
-      token: parsed.token || null,
-      likedItems: parsed.likedItems || [],
-    };
-  }
-  return { token: null, likedItems: [] };
-};
+import useLocal from "../hook/useLocal";
 
-const saveAppData = (data) => {
-  localStorage.setItem("asmedia.local", JSON.stringify(data));
-};
+export default function LikeButton({ movie }) {
+  const [likedItems, setLikedItems] = useLocal("likedItems", []);
 
-export default function LikeButton({ movieId }) {
-  const [liked, setLiked] = useState(false);
-
-  useEffect(() => {
-    const items = getAppData().likedItems;
-    setLiked(items.includes(movieId));
-  }, [movieId]);
+  const isLiked = likedItems?.some((m) => m.id === movie.id);
 
   const toggleLike = () => {
-    const data = getAppData();
-    let items = [...data.likedItems];
-
-    if (items.includes(movieId)) {
-      items = items.filter((id) => id !== movieId);
-      setLiked(false);
+    let updated;
+    if (isLiked) {
+      updated = likedItems.filter((m) => m.id !== movie.id);
     } else {
-      items.push(movieId);
-      setLiked(true);
+      updated = [...likedItems, movie];
     }
-
-    data.likedItems = items;
-    saveAppData(data);
+    setLikedItems(updated);
   };
 
   return (
     <button
       onClick={toggleLike}
-      style={{
-        padding: "8px 12px",
-        borderRadius: "8px",
-        border: "1px solid #ccc",
-        background: liked ? "red" : "white",
-        color: liked ? "white" : "black",
-        cursor: "pointer",
-      }}
+      className={`px-4 py-2 rounded-md text-white ${
+        isLiked ? "bg-red-500" : "bg-blue-500"
+      }`}
     >
-      {liked ? "❤️ Liked" : "🤍 Like"}
+      {isLiked ? "Unlike" : "Like"}
     </button>
   );
 }

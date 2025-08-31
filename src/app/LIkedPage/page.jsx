@@ -1,93 +1,26 @@
 "use client";
+import Link from "next/link";
+import useLocal from "../hook/useLocal";
 
-import { useEffect, useState } from "react";
+export default function LikesPage() {
+  const [likedItems] = useLocal("likedItems", []);
 
-// LocalStorage helper funksiyalar
-const getData = (key) => {
-  if (typeof window !== "undefined") {
-    const data = localStorage.getItem(key);
-    return data ? JSON.parse(data) : null;
+  if (!likedItems || likedItems.length === 0) {
+    return <p className="p-6">Hech qanday yoqtirilgan film yo‘q 🙂</p>;
   }
-  return null;
-};
-
-const saveData = (key, value) => {
-  if (typeof window !== "undefined") {
-    localStorage.setItem(key, JSON.stringify(value));
-  }
-};
-
-export default function LikedPage() {
-  const [token, setToken] = useState(null);
-  const [likedItems, setLikedItems] = useState([]);
-
-  // sahifa ochilganda localStorage dan malumotlarni olish
-  useEffect(() => {
-    const storedToken = getData("token");
-    const storedItems = getData("likedItems") || [];
-
-    // null larni tozalaymiz
-    const cleanedItems = storedItems.filter((i) => i !== null);
-
-    setToken(storedToken);
-    setLikedItems(cleanedItems);
-  }, []);
-
-  // Like qo‘shish yoki o‘chirish
-  const toggleLike = (item) => {
-    if (!item || !item.id) return; // agar item null bo‘lsa chiqib ketadi
-
-    let updatedItems;
-    if (likedItems.some((i) => i.id === item.id)) {
-      // agar bor bo‘lsa o‘chiramiz
-      updatedItems = likedItems.filter((i) => i.id !== item.id);
-    } else {
-      // agar yo‘q bo‘lsa qo‘shamiz
-      updatedItems = [...likedItems, item];
-    }
-    setLikedItems(updatedItems);
-    saveData("likedItems", updatedItems);
-  };
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h1>Liked Page</h1>
-
-      {/* Token chiqarish */}
-      <div style={{ marginBottom: "20px" }}>
-        <strong>Token:</strong> {token || "Token topilmadi"}
-      </div>
-
-      {/* Liked items ro‘yxati */}
-      <div>
-        <h2>Saved Items:</h2>
-        {likedItems.length === 0 ? (
-          <p>Hech narsa yo‘q</p>
-        ) : (
-          <ul>
-            {likedItems.map((item) => (
-              <li key={item.id} style={{ marginBottom: "10px" }}>
-                {item.title || item.name}{" "}
-                <button onClick={() => toggleLike(item)}>Remove</button>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
-
-      {/* Test uchun qo‘lda to‘liq item qo‘shish */}
-      <button
-        onClick={() =>
-          toggleLike({
-            id: 1,
-            title: "Test Movie",
-            name: "Test Name",
-            poster_path: "/test.jpg",
-          })
-        }
-      >
-        Test Like
-      </button>
+    <div className="p-6 space-y-4">
+      <h1 className="text-2xl font-bold">❤️ Liked Movies</h1>
+      <ul className="space-y-2">
+        {likedItems.map((movie) => (
+          <li key={movie.id} className="p-4 border rounded-md">
+            <Link href={`/Movies/${movie.id}`} className="text-blue-600">
+              {movie.title}
+            </Link>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

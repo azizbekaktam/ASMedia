@@ -53,7 +53,7 @@ export default function MovieDetail({ token }) {
           <p className="mt-4 leading-relaxed">{overview}</p>
           <p className="mt-4 text-yellow-500 font-semibold">⭐ Rating: {vote_average} / 10</p>
 
-          <LikeButton itemId={movie.id} token={token} />
+          <LikeButton itemId={movie} token={token} />
 
           {trailer && (
             <div className="mt-6">
