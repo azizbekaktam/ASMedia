@@ -1,16 +1,16 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import Search from "./Search";
 import LogOut from "./LogOut";
-import Link from "next/link";
 import { FaBars, FaTimes } from "react-icons/fa";
 
 export default function Navbar() {
-  const [open, setOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <nav className="bg-white dark:bg-gray-900 text-gray-900 dark:text-white px-6 py-3 shadow-lg transition-colors relative">
+    <nav className="bg-white dark:bg-gray-900 text-gray-900 dark:text-white px-6 py-3 shadow-lg relative flex items-center justify-between">
       
       {/* Logo */}
       <div className="font-extrabold text-xl tracking-wide text-yellow-500">
@@ -19,19 +19,21 @@ export default function Navbar() {
 
       {/* Desktop Menu */}
       <ul className="hidden md:flex gap-6 font-medium">
-        <Link href="/" className="relative group">
+        <Link href="/" className="group relative">
           <li className="cursor-pointer hover:text-yellow-500 dark:hover:text-yellow-400 transition-colors">
             Home
           </li>
           <span className="absolute left-0 -bottom-1 w-0 group-hover:w-full h-0.5 bg-yellow-500 dark:bg-yellow-400 transition-all"></span>
         </Link>
-        <Link href="/Movies" className="relative group">
+
+        <Link href="/Movies" className="group relative">
           <li className="cursor-pointer hover:text-yellow-500 dark:hover:text-yellow-400 transition-colors">
             Movies
           </li>
           <span className="absolute left-0 -bottom-1 w-0 group-hover:w-full h-0.5 bg-yellow-500 dark:bg-yellow-400 transition-all"></span>
         </Link>
-        <Link href="/Cartoon" className="relative group">
+
+        <Link href="/Cartoon" className="group relative">
           <li className="cursor-pointer hover:text-yellow-500 dark:hover:text-yellow-400 transition-colors">
             Cinema
           </li>
@@ -43,31 +45,36 @@ export default function Navbar() {
       <div className="hidden md:flex items-center gap-4">
         <Search />
         <div className="w-9 h-9 rounded-full bg-gradient-to-r from-yellow-400 to-yellow-500 flex items-center justify-center text-black font-bold text-sm shadow-md">
-          <Link href={"/LikedPage"}>Liked</Link>
+          <Link href="/LikedPage">Liked</Link>
         </div>
         <LogOut />
       </div>
 
       {/* Mobile Hamburger */}
-      <div className="md:hidden flex items-center">
-        <button onClick={() => setOpen(!open)}>
-          {open ? <FaTimes className="w-6 h-6" /> : <FaBars className="w-6 h-6" />}
-        </button>
-      </div>
+      <button
+        className="md:hidden text-gray-900 dark:text-white"
+        onClick={() => setMenuOpen(!menuOpen)}
+      >
+        {menuOpen ? <FaTimes className="w-6 h-6" /> : <FaBars className="w-6 h-6" />}
+      </button>
 
       {/* Mobile Menu */}
-      {open && (
-        <div className="absolute top-16 left-0 w-full bg-white dark:bg-gray-900 flex flex-col items-center gap-4 p-4 shadow-md md:hidden">
-          <Link href="/" onClick={() => setOpen(false)}>Home</Link>
-          <Link href="/Movies" onClick={() => setOpen(false)}>Movies</Link>
-          <Link href="/Cartoon" onClick={() => setOpen(false)}>Cinema</Link>
+      <div
+        className={`absolute top-full left-0 w-full bg-white dark:bg-gray-900 md:hidden transition-all duration-300 overflow-hidden ${
+          menuOpen ? "max-h-screen p-4" : "max-h-0"
+        }`}
+      >
+        <ul className="flex flex-col gap-4 text-center">
+          <Link href="/" onClick={() => setMenuOpen(false)}>Home</Link>
+          <Link href="/Movies" onClick={() => setMenuOpen(false)}>Movies</Link>
+          <Link href="/Cartoon" onClick={() => setMenuOpen(false)}>Cinema</Link>
           <Search />
-          <div className="w-9 h-9 rounded-full bg-gradient-to-r from-yellow-400 to-yellow-500 flex items-center justify-center text-black font-bold text-sm shadow-md">
-            <Link href={"/LikedPage"} onClick={() => setOpen(false)}>Liked</Link>
+          <div className="w-9 h-9 mx-auto rounded-full bg-gradient-to-r from-yellow-400 to-yellow-500 flex items-center justify-center text-black font-bold text-sm shadow-md">
+            <Link href="/LikedPage" onClick={() => setMenuOpen(false)}>Liked</Link>
           </div>
           <LogOut />
-        </div>
-      )}
+        </ul>
+      </div>
     </nav>
   );
 }
