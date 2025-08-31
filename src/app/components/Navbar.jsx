@@ -38,6 +38,12 @@ export default function Navbar() {
             </li>
             <span className="absolute left-0 -bottom-1 w-0 group-hover:w-full h-0.5 bg-yellow-500 transition-all"></span>
           </Link>
+                    <Link href="/LIkedPage" className="relative group">
+            <li className="cursor-pointer hover:text-yellow-500 transition-colors">
+              Like
+            </li>
+            <span className="absolute left-0 -bottom-1 w-0 group-hover:w-full h-0.5 bg-yellow-500 transition-all"></span>
+          </Link>
         </ul>
 
         <div className="flex items-center gap-4">
