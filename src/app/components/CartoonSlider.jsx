@@ -37,7 +37,7 @@ export default function CartoonSlider() {
     );
 
   return (
-    <div className="relative w-full h-[420px] overflow-hidden rounded-2xl shadow-xl">
+    <div className="relative mt-30px  w-full h-[420px] overflow-hidden rounded-2xl shadow-xl">
       <img
         src={`${process.env.NEXT_PUBLIC_Project_TmdApi_Api_SliderImg}/t/p/original${cartoons[current].backdrop_path}`}
         alt={cartoons[current].title}

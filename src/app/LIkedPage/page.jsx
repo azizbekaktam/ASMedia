@@ -11,6 +11,9 @@ export default function LikesPage() {
   const [likes, setLikes] = useState([]);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+const handleDelete = (id) => {
+  setLikes((prevLikes) => prevLikes.filter((movie) => movie.id !== id));
+};
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((currentUser) => {
@@ -64,6 +67,12 @@ export default function LikesPage() {
         >
           Details
         </a>
+                  <button
+            onClick={() => handleDelete(movie.id)} // 🔥 O‘chirish funksiyasi
+            className="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+          >
+            Delete
+          </button>
       </div>
     </div>
   ))}

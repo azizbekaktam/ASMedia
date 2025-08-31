@@ -34,7 +34,7 @@ export default function Navbar() {
 
           <Link href="/Cartoon" className="relative group">
             <li className="cursor-pointer hover:text-yellow-500 transition-colors">
-              Cinema
+              Cartoon
             </li>
             <span className="absolute left-0 -bottom-1 w-0 group-hover:w-full h-0.5 bg-yellow-500 transition-all"></span>
           </Link>

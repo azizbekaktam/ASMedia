@@ -49,7 +49,7 @@ export default function LikeButton({ movie }) {
   return (
     <button
       onClick={toggleLike}
-      className={`px-3 py-1 rounded ${
+      className={`px-3 py-1 rounded flex  ${
         liked ? "bg-red-500 text-white" : "bg-gray-200"
       }`}
     >

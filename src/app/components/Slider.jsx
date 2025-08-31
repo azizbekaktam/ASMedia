@@ -37,7 +37,7 @@ export default function Slider() {
     );
 
   return (
-<div className="relative w-full h-[450px] overflow-hidden rounded-2xl shadow-xl">
+<div className="relative w-full mt-30px h-[450px] overflow-hidden rounded-2xl shadow-xl">
   <img
     src={`${process.env.NEXT_PUBLIC_Project_TmdApi_Api_SliderImg}/t/p/original${movies[current].backdrop_path}`}
     alt={movies[current].title}
