@@ -18,16 +18,11 @@ export default function Navbar() {
         </div>
 
         <ul className="hidden md:flex gap-8 font-medium text-white">
-          <Link href="/" className="relative group">
-            <li className="cursor-pointer hover:text-yellow-500 transition-colors">
-              Home
-            </li>
-            <span className="absolute left-0 -bottom-1 w-0 group-hover:w-full h-0.5 bg-yellow-500 transition-all"></span>
-          </Link>
+
 
           <Link href="/Movies" className="relative group">
             <li className="cursor-pointer hover:text-yellow-500 transition-colors">
-              Movies
+              Home
             </li>
             <span className="absolute left-0 -bottom-1 w-0 group-hover:w-full h-0.5 bg-yellow-500 transition-all"></span>
           </Link>
@@ -47,7 +42,7 @@ export default function Navbar() {
         </ul>
 
         <div className="flex items-center gap-4">
-          <div className="hidden md:block w-40 lg:w-56">
+          <div className="hidden md:block w-40 lg:w-56 right-10px">
             <Search />
           </div>
 
