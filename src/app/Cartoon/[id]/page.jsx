@@ -72,7 +72,7 @@ export default function CartoonDetail({ token }) {
             <span className="text-lg font-semibold text-gray-800">{vote_average} / 10</span>
           </div>
 
-          <LikeButton item={cartoon} token={token} />
+          <LikeButton movie={cartoon}  />
 
           {trailerKey && (
             <div className="mt-10">
