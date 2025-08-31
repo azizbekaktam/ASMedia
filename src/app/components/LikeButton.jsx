@@ -1,42 +1,61 @@
 "use client";
-
 import { useState, useEffect } from "react";
 
-export default function LikeButton({ item, token }) {
-  const [inCart, setInCart] = useState(false);
+// LocalStorage helperlari
+const saveAppData = (data) => {
+  localStorage.setItem("asmedia.local", JSON.stringify(data));
+};
+
+const getAppData = () => {
+  const data = localStorage.getItem("asmedia.local");
+  return data ? JSON.parse(data) : { token: null, likedItems: [] };
+};
+
+const saveLikedItems = (items) => {
+  const data = getAppData();
+  data.likedItems = items;
+  saveAppData(data);
+};
+
+const getLikedItems = () => {
+  const data = getAppData();
+  return data.likedItems || [];
+};
+
+export default function LikeButton({ itemId }) {
+  const [liked, setLiked] = useState(false);
 
   useEffect(() => {
-    if (!token) return;
-    const userCartKey = `cart_${token}`;
-    const cart = JSON.parse(localStorage.getItem(userCartKey)) || [];
-    const exists = cart.some(el => el.id === item.id && el.type === item.type);
-    setInCart(exists);
-  }, [item, token]);
+    const items = getLikedItems();
+    setLiked(items.includes(itemId));
+  }, [itemId]);
 
-  const handleClick = () => {
-    if (!token) return alert("Iltimos, avval login qiling!");
-    const userCartKey = `cart_${token}`;
-    const cart = JSON.parse(localStorage.getItem(userCartKey)) || [];
-
-    if (inCart) {
-      const newCart = cart.filter(el => !(el.id === item.id && el.type === item.type));
-      localStorage.setItem(userCartKey, JSON.stringify(newCart));
-      setInCart(false);
+  const toggleLike = () => {
+    let items = getLikedItems();
+    if (items.includes(itemId)) {
+      items = items.filter((id) => id !== itemId);
+      setLiked(false);
     } else {
-      cart.push(item);
-      localStorage.setItem(userCartKey, JSON.stringify(cart));
-      setInCart(true);
+      items.push(itemId);
+      setLiked(true);
     }
+    saveLikedItems(items);
   };
 
   return (
     <button
-      onClick={handleClick}
-      className={`mt-6 px-6 py-3 rounded-lg font-semibold transition-colors ${
-        inCart ? "bg-red-500 hover:bg-red-600 text-white" : "bg-green-500 hover:bg-green-600 text-white"
-      }`}
+      onClick={toggleLike}
+      style={{
+        padding: "8px 12px",
+        borderRadius: "8px",
+        border: "1px solid #ccc",
+        background: liked ? "red" : "white",
+        color: liked ? "white" : "black",
+        cursor: "pointer",
+        margin: "5px"
+      }}
     >
-      {inCart ? "❌ Savatdan o‘chirish" : "❤️ Savatga qo‘shish"}
+      {liked ? "❤️ Liked" : "🤍 Like"}
     </button>
   );
 }
