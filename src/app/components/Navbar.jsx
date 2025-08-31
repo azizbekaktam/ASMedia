@@ -56,7 +56,7 @@ export default function Navbar() {
                  flex items-center justify-center 
                  text-black font-bold text-sm shadow-md"
         >
-          <Link href={"/LikedPage"}>Liked</Link>
+          <Link href={"/LIkedPage"}>Liked</Link>
         </div>
 
         <LogOut />
