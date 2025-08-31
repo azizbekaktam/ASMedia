@@ -4,14 +4,22 @@ import { doc, onSnapshot, setDoc, deleteDoc } from "firebase/firestore";
 
 export default function LikeButton({ movie }) {
   const [liked, setLiked] = useState(false);
-  const user = auth.currentUser;
+  const [user, setUser] = useState(null);
+
+  // Login holatini real-time kuzatish
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((currentUser) => {
+      setUser(currentUser);
+    });
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     if (!user) return;
 
     const ref = doc(db, "users", user.uid, "likes", String(movie.id));
-    
-    // Real-time snapshot
+
+    // Real-time liked state
     const unsubscribe = onSnapshot(ref, (docSnap) => {
       setLiked(docSnap.exists());
     });
