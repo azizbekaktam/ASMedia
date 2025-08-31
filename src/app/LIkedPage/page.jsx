@@ -2,25 +2,33 @@
 
 import { useEffect, useState } from "react";
 import { auth, db } from "../../../firebase";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, doc, setDoc, deleteDoc, getDoc } from "firebase/firestore";
 
 export default function LikesPage() {
   const [likes, setLikes] = useState([]);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((currentUser) => {
+      setUser(currentUser);
+      setLoading(false);
+    });
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     const fetchLikes = async () => {
-      const user = auth.currentUser;
-      if (!user) {
-        alert("Avval login qiling!");
-        return;
-      }
+      if (!user) return;
       const ref = collection(db, "users", user.uid, "likes");
       const snapshot = await getDocs(ref);
       setLikes(snapshot.docs.map((doc) => doc.data()));
     };
-
     fetchLikes();
-  }, []);
+  }, [user]);
+
+  if (loading) return <p>Loading...</p>;
+  if (!user) return <p>Avval login qiling!</p>;
 
   return (
     <div className="p-4">
