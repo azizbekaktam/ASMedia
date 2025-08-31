@@ -1,30 +1,56 @@
 "use client";
 
-import useLocal from "../hook/useLocal";
+import { useState, useEffect } from "react";
+import { auth, db } from "../../../firebase";
+import { doc, setDoc, deleteDoc, getDoc } from "firebase/firestore";
 
 export default function LikeButton({ movie }) {
-  const [likedItems, setLikedItems] = useLocal("likedItems", []);
+  const [liked, setLiked] = useState(false);
 
-  const isLiked = likedItems?.some((m) => m.id === movie.id);
+  useEffect(() => {
+    const user = auth.currentUser;
+    if (!user) return;
 
-  const toggleLike = () => {
-    let updated;
-    if (isLiked) {
-      updated = likedItems.filter((m) => m.id !== movie.id);
-    } else {
-      updated = [...likedItems, movie];
+    const checkLike = async () => {
+      const ref = doc(db, "users", user.uid, "likes", String(movie.id));
+      const snap = await getDoc(ref);
+      setLiked(snap.exists());
+    };
+
+    checkLike();
+  }, [movie.id]);
+
+  const toggleLike = async () => {
+    const user = auth.currentUser;
+    if (!user) {
+      alert("Avval login qiling!");
+      return;
     }
-    setLikedItems(updated);
+
+    const ref = doc(db, "users", user.uid, "likes", String(movie.id));
+
+    if (liked) {
+      await deleteDoc(ref);
+      setLiked(false);
+    } else {
+      await setDoc(ref, {
+        id: movie.id,
+        title: movie.title,
+        poster_path: movie.poster_path,
+        release_date: movie.release_date,
+      });
+      setLiked(true);
+    }
   };
 
   return (
     <button
       onClick={toggleLike}
-      className={`px-4 py-2 rounded-md text-white ${
-        isLiked ? "bg-red-500" : "bg-blue-500"
+      className={`px-3 py-1 rounded ${
+        liked ? "bg-red-500 text-white" : "bg-gray-200"
       }`}
     >
-      {isLiked ? "Unlike" : "Like"}
+      {liked ? "❤️ Liked" : "🤍 Like"}
     </button>
   );
 }
