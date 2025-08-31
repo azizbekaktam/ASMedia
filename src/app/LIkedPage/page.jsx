@@ -26,12 +26,17 @@ export default function LikedPage() {
     const storedToken = getData("token");
     const storedItems = getData("likedItems") || [];
 
+    // null larni tozalaymiz
+    const cleanedItems = storedItems.filter((i) => i !== null);
+
     setToken(storedToken);
-    setLikedItems(storedItems);
+    setLikedItems(cleanedItems);
   }, []);
 
   // Like qo‘shish yoki o‘chirish
   const toggleLike = (item) => {
+    if (!item || !item.id) return; // agar item null bo‘lsa chiqib ketadi
+
     let updatedItems;
     if (likedItems.some((i) => i.id === item.id)) {
       // agar bor bo‘lsa o‘chiramiz
@@ -70,10 +75,15 @@ export default function LikedPage() {
         )}
       </div>
 
-      {/* Test uchun qo‘lda item qo‘shish */}
+      {/* Test uchun qo‘lda to‘liq item qo‘shish */}
       <button
         onClick={() =>
-          toggleLike({ id: 1, title: "Test Movie", name: "Test Name" })
+          toggleLike({
+            id: 1,
+            title: "Test Movie",
+            name: "Test Name",
+            poster_path: "/test.jpg",
+          })
         }
       >
         Test Like
