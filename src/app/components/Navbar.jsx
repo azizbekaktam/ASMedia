@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import Search from "./Search";
 import LogOut from "./LogOut";
+import UserProfile from "./UserPage";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -46,6 +47,10 @@ export default function Navbar() {
             </li>
             <span className="absolute left-0 -bottom-1 w-0 group-hover:w-full h-0.5 bg-yellow-500 transition-all"></span>
           </Link>
+          {/* Avatar */}
+          <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-yellow-500 shadow-md cursor-pointer hover:scale-105 transition-transform">
+            <UserProfile />
+          </div>
         </ul>
 
         {/* Right side */}
@@ -61,17 +66,6 @@ export default function Navbar() {
             className="w-9 h-9 rounded-full bg-gradient-to-r from-yellow-400 to-yellow-500 flex items-center justify-center text-black font-bold text-xs shadow-md hover:scale-110 transition-transform"
           >
             ♥
-          </Link>
-
-          {/* Avatar */}
-          <Link href="/UserPage">
-            <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-yellow-500 shadow-md cursor-pointer hover:scale-105 transition-transform">
-              <img
-                src="https://i.pravatar.cc/100" // test avatar rasmi
-                alt="User Avatar"
-                className="w-full h-full object-cover"
-              />
-            </div>
           </Link>
 
           {/* Logout */}
