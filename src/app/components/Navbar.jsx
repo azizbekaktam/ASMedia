@@ -1,17 +1,42 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Menu, X } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { Menu, X, Bell } from "lucide-react";
 import Search from "./Search";
 import LogOut from "./LogOut";
 import UserProfile from "./UserPage";
+import { auth, db } from "../../../firebase";
+import { doc, getDoc } from "firebase/firestore";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [userRole, setUserRole] = useState(null);
+  const pathname = usePathname();
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(async (currentUser) => {
+      if (currentUser) {
+        const ref = doc(db, "users", currentUser.uid);
+        const snap = await getDoc(ref);
+        if (snap.exists()) {
+          setUserRole(snap.data().role);
+        }
+      }
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const navItems = [
+    { name: "Home", href: "/" },
+    { name: "Movies", href: "/Movies" },
+    { name: "Cartoon", href: "/Cartoon" },
+    { name: "Like", href: "/LIkedPage" },
+  ];
 
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 bg-gray-900 shadow-md">
+    <nav className="fixed top-0 left-0 w-full z-50 bg-gray-900 shadow-lg">
       <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
         {/* Logo */}
         <div className="font-extrabold text-2xl tracking-wide text-yellow-500">
@@ -19,49 +44,48 @@ export default function Navbar() {
         </div>
 
         {/* Desktop menu */}
-        <ul className="hidden md:flex gap-8 font-medium text-white items-center">
-          <Link href="/" className="relative group">
-            <li className="cursor-pointer hover:text-yellow-500 transition-colors">
-              Home
-            </li>
-            <span className="absolute left-0 -bottom-1 w-0 group-hover:w-full h-0.5 bg-yellow-500 transition-all"></span>
-          </Link>
+        <ul className="hidden md:flex gap-6 font-medium text-white items-center">
+          {navItems.map((item) => (
+            <Link key={item.name} href={item.href} className="relative group">
+              <li
+                className={`cursor-pointer transition-colors ${
+                  pathname === item.href ? "text-yellow-400 font-bold" : "hover:text-yellow-500"
+                }`}
+              >
+                {item.name}
+              </li>
+              <span className="absolute left-0 -bottom-1 w-0 group-hover:w-full h-0.5 bg-yellow-500 transition-all"></span>
+            </Link>
+          ))}
 
-          <Link href="/Movies" className="relative group">
-            <li className="cursor-pointer hover:text-yellow-500 transition-colors">
-              Movies
-            </li>
-            <span className="absolute left-0 -bottom-1 w-0 group-hover:w-full h-0.5 bg-yellow-500 transition-all"></span>
-          </Link>
+          {userRole === "admin" && (
+            <Link href="/Admin" className="relative group">
+              <li
+                className={`cursor-pointer transition-colors ${
+                  pathname === "/Admin" ? "text-yellow-400 font-bold" : "hover:text-yellow-500"
+                }`}
+              >
+                Admin
+              </li>
+              <span className="absolute left-0 -bottom-1 w-0 group-hover:w-full h-0.5 bg-yellow-500 transition-all"></span>
+            </Link>
+          )}
 
-          <Link href="/Cartoon" className="relative group">
-            <li className="cursor-pointer hover:text-yellow-500 transition-colors">
-              Cartoon
-            </li>
-            <span className="absolute left-0 -bottom-1 w-0 group-hover:w-full h-0.5 bg-yellow-500 transition-all"></span>
-          </Link>
+          {/* Notification icon */}
+          <li className="relative">
+            <Bell className="w-5 h-5 cursor-pointer hover:text-yellow-500 transition-colors" />
+            <span className="absolute -top-2 -right-2 w-2 h-2 bg-red-500 rounded-full"></span>
+          </li>
 
-          <Link href="/LIkedPage" className="relative group">
-            <li className="cursor-pointer hover:text-yellow-500 transition-colors">
-              Like
-            </li>
-            <span className="absolute left-0 -bottom-1 w-0 group-hover:w-full h-0.5 bg-yellow-500 transition-all"></span>
-          </Link>
-           <Link href="/Admin" className="relative group">
-            <li className="cursor-pointer hover:text-yellow-500 transition-colors">
-              Admin
-            </li>
-            <span className="absolute left-0 -bottom-1 w-0 group-hover:w-full h-0.5 bg-yellow-500 transition-all"></span>
-          </Link>
           {/* Avatar */}
-          <div className="w-10 h-10 rounded-full border-2 border-red-500">
+          <div className="w-10 h-10 rounded-full border-2 border-yellow-500 overflow-hidden">
             <UserProfile />
           </div>
         </ul>
 
         {/* Right side */}
         <div className="flex items-center gap-4">
-          {/* Search bar */}
+          {/* Search */}
           <div className="hidden md:block w-40 lg:w-56">
             <Search />
           </div>
@@ -78,10 +102,7 @@ export default function Navbar() {
           <LogOut />
 
           {/* Mobile toggle */}
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden text-white"
-          >
+          <button onClick={() => setIsOpen(!isOpen)} className="md:hidden text-white">
             {isOpen ? <X size={26} /> : <Menu size={26} />}
           </button>
         </div>
@@ -90,21 +111,17 @@ export default function Navbar() {
       {/* Mobile menu */}
       {isOpen && (
         <div className="md:hidden bg-gray-900 shadow-md px-6 py-4 space-y-4 text-white">
-          <div className="w-full">
-            <Search />
-          </div>
-          <Link href="/" className="block hover:text-yellow-500">
-            Home
-          </Link>
-          <Link href="/Movies" className="block hover:text-yellow-500">
-            Movies
-          </Link>
-          <Link href="/Cartoon" className="block hover:text-yellow-500">
-            Cartoon
-          </Link>
-          <Link href="/LIkedPage" className="block hover:text-yellow-500">
-            Like
-          </Link>
+          <Search />
+          {navItems.map((item) => (
+            <Link key={item.name} href={item.href} className="block hover:text-yellow-500">
+              {item.name}
+            </Link>
+          ))}
+          {userRole === "admin" && (
+            <Link href="/Admin" className="block hover:text-yellow-500">
+              Admin
+            </Link>
+          )}
         </div>
       )}
     </nav>
