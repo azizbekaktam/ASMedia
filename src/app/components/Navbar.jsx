@@ -48,7 +48,7 @@ export default function Navbar() {
             <span className="absolute left-0 -bottom-1 w-0 group-hover:w-full h-0.5 bg-yellow-500 transition-all"></span>
           </Link>
           {/* Avatar */}
-          <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-yellow-500 shadow-md cursor-pointer hover:scale-105 transition-transform">
+          <div className="w-10 h-10 rounded-full border-2 border-red-500">
             <UserProfile />
           </div>
         </ul>
