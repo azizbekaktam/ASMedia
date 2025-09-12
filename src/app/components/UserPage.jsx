@@ -50,7 +50,7 @@ export default function UserProfile() {
         )}
       </div>
 
-      {/* Dropdown (katakcha-style) */}
+      {/* Dropdown */}
       {open && (
         <div className="absolute right-0 mt-3 w-72 bg-white dark:bg-gray-900 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-4 z-50 animate-fadeIn space-y-3">
           {/* Avatar katak */}
@@ -91,6 +91,22 @@ export default function UserProfile() {
             >
               {userData?.plan ? userData.plan.toUpperCase() : "FREE"}
             </span>
+          </div>
+
+          {/* Role katak */}
+          <div className="p-3 rounded-xl bg-gray-50 dark:bg-gray-800 shadow-sm text-center">
+            <span className="px-4 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700 dark:bg-blue-700 dark:text-white">
+              {userData?.role ? userData.role.toUpperCase() : "USER"}
+            </span>
+          </div>
+
+          {/* CreatedAt katak */}
+          <div className="p-3 rounded-xl bg-gray-50 dark:bg-gray-800 shadow-sm text-center">
+            <p className="text-xs text-gray-500">
+              {userData?.createdAt
+                ? new Date(userData.createdAt).toLocaleString()
+                : "Unknown"}
+            </p>
           </div>
         </div>
       )}
