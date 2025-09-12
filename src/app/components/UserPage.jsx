@@ -26,14 +26,18 @@ export default function UserProfile() {
   }, []);
 
   if (!user) {
-    return null; // login qilmagan bo'lsa hech narsa chiqmaydi
+    return null; // login qilmagan bo'lsa chiqmaydi
   }
 
+  // Fallback name agar bazada yo'q bo'lsa
+  const displayName =
+    userData?.name || user.email.split("@")[0] || "No Name";
+
   return (
-    <>
-      {/* Avatar headerda */}
+    <div className="relative">
+      {/* Avatar */}
       <div
-        onClick={() => setOpen(true)}
+        onClick={() => setOpen((prev) => !prev)}
         className="w-10 h-10 rounded-full overflow-hidden border-2 border-yellow-500 shadow-md cursor-pointer hover:scale-105 transition-transform"
       >
         {userData?.photoURL ? (
@@ -44,59 +48,47 @@ export default function UserProfile() {
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-gradient-to-r from-yellow-400 to-yellow-500 text-black font-bold">
-            {userData?.name ? userData.name[0] : "?"}
+            {displayName[0]?.toUpperCase()}
           </div>
         )}
       </div>
 
-      {/* Modal */}
+      {/* Dropdown modal (avatar tagidan chiqadi) */}
       {open && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-50 px-4">
-          <div className="relative bg-white/90 dark:bg-gray-900/90 text-gray-900 dark:text-white p-8 rounded-2xl shadow-2xl w-full max-w-md animate-fadeIn">
-            {/* Close button */}
-            <button
-              onClick={() => setOpen(false)}
-              className="absolute top-3 right-3 text-gray-500 hover:text-red-500"
+        <div className="absolute right-0 mt-3 w-64 bg-white dark:bg-gray-900 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-4 z-50 animate-fadeIn">
+          <div className="flex flex-col items-center text-center">
+            {/* Avatar big */}
+            {userData?.photoURL ? (
+              <img
+                src={userData.photoURL}
+                alt={displayName}
+                className="w-16 h-16 rounded-full object-cover border-2 border-yellow-500 shadow mb-3"
+              />
+            ) : (
+              <div className="w-16 h-16 rounded-full bg-gradient-to-r from-yellow-400 to-yellow-500 flex items-center justify-center text-xl font-bold text-black shadow mb-3">
+                {displayName[0]?.toUpperCase()}
+              </div>
+            )}
+
+            {/* User details */}
+            <h2 className="text-lg font-semibold">{displayName}</h2>
+            <p className="text-gray-500 text-sm">{user.email}</p>
+
+            {/* Plan */}
+            <span
+              className={`mt-3 px-4 py-1 rounded-full text-xs font-medium ${
+                userData?.plan === "premium"
+                  ? "bg-gradient-to-r from-yellow-400 to-yellow-600 text-white shadow"
+                  : "bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-300"
+              }`}
             >
-              ✖
-            </button>
+              {userData?.plan ? userData.plan.toUpperCase() : "FREE"}
+            </span>
 
-            <div className="flex flex-col items-center text-center">
-              {/* Avatar big */}
-              {userData?.photoURL ? (
-                <img
-                  src={userData.photoURL}
-                  alt={userData?.name}
-                  className="w-24 h-24 rounded-full object-cover border-4 border-yellow-500 shadow-md mb-4"
-                />
-              ) : (
-                <div className="w-24 h-24 rounded-full bg-gradient-to-r from-yellow-400 to-yellow-500 flex items-center justify-center text-3xl font-bold text-black shadow-md mb-4">
-                  {userData?.name ? userData.name[0] : "?"}
-                </div>
-              )}
-
-              {/* User details */}
-              <h2 className="text-2xl font-bold">
-                {userData?.name || "No Name"}
-              </h2>
-              <p className="text-gray-500">{user.email}</p>
-
-              {/* Plan */}
-              <span
-                className={`mt-5 px-6 py-2 rounded-full text-sm font-semibold ${
-                  userData?.plan === "premium"
-                    ? "bg-gradient-to-r from-yellow-400 to-yellow-600 text-white shadow-md"
-                    : "bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-300"
-                }`}
-              >
-                {userData?.plan ? userData.plan.toUpperCase() : "FREE"}
-              </span>
-
-              {/* 🔜 Keyin Logout tugma shu yerga qo'shamiz */}
-            </div>
+            {/* 🔜 Keyin logout tugma qo'shamiz */}
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }
