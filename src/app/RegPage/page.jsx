@@ -1,7 +1,8 @@
 "use client";
 import { useState } from "react";
-import { auth } from "../../../firebase";
+import { auth, db } from "../../../firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { setDoc, doc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -13,9 +14,18 @@ export default function RegPage() {
 
   const handleRegister = async () => {
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      await setDoc(doc(db, "users", user.uid), {
+        email: user.email,
+        role: "user", 
+        plan: "free", 
+        createdAt: new Date(),
+      });
       router.push("/LoginPage");
     } catch (err) {
+      console.error(err);
       setError("Ro‘yxatdan o‘tishda xatolik ❌");
     }
   };

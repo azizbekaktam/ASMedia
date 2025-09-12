@@ -1,7 +1,8 @@
 "use client";
 import { useState } from "react";
-import { auth } from "../../../firebase";
+import { auth, db } from "../../../firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { getDoc, doc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -13,7 +14,11 @@ export default function LoginPage() {
 
   const handleLogin = async () => {
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
       const user = userCredential.user;
 
       // 🔑 Firebase token olish
@@ -21,6 +26,17 @@ export default function LoginPage() {
 
       // LocalStorage ga saqlash
       localStorage.setItem("token", token);
+
+      // 🔍 Firestore’dan role olib kelish
+      const userRef = doc(db, "users", user.uid);
+      const userSnap = await getDoc(userRef);
+
+      if (userSnap.exists()) {
+        const userData = userSnap.data();
+        localStorage.setItem("role", userData.role || "user"); // "admin" yoki "user"
+      } else {
+        localStorage.setItem("role", "user"); // default
+      }
 
       router.push("/Movies");
     } catch (err) {
@@ -38,14 +54,14 @@ export default function LoginPage() {
           type="email"
           placeholder="Email"
           value={email}
-          onChange={e => setEmail(e.target.value)}
+          onChange={(e) => setEmail(e.target.value)}
           className="border border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 outline-none p-3 w-full mb-4 rounded-lg"
         />
         <input
           type="password"
           placeholder="Password"
           value={password}
-          onChange={e => setPassword(e.target.value)}
+          onChange={(e) => setPassword(e.target.value)}
           className="border border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 outline-none p-3 w-full mb-4 rounded-lg"
         />
         <button
@@ -54,9 +70,7 @@ export default function LoginPage() {
         >
           Login
         </button>
-        {error && (
-          <p className="text-red-500 text-center mt-3">{error}</p>
-        )}
+        {error && <p className="text-red-500 text-center mt-3">{error}</p>}
         <p className="mt-6 text-sm text-center text-gray-600">
           Hali ro‘yxatdan o‘tmaganmisiz?{" "}
           <Link href="/RegPage" className="text-blue-600 hover:underline">
