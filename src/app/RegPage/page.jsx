@@ -1,7 +1,10 @@
 "use client";
 import { useState } from "react";
 import { auth, db } from "../../../firebase";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  fetchSignInMethodsForEmail,
+} from "firebase/auth";
 import { setDoc, doc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -14,19 +17,44 @@ export default function RegPage() {
 
   const handleRegister = async () => {
     try {
+      // 🔹 Avval email mavjudligini tekshirish
+      const methods = await fetchSignInMethodsForEmail(auth, email);
+
+      if (methods.length > 0) {
+        if (methods.includes("password")) {
+          setError("Bu email allaqachon ro‘yxatdan o‘tgan. Iltimos, login qiling.");
+        } else {
+          setError(
+            `Bu email boshqa usul bilan ro‘yxatdan o‘tgan (${methods.join(
+              ", "
+            )}). Shu usul bilan kiring.`
+          );
+        }
+        return;
+      }
+
+      // 🔹 Agar email bo‘sh bo‘lsa → yangi user yaratamiz
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
+      // 🔹 Firestore ga yozish
       await setDoc(doc(db, "users", user.uid), {
         email: user.email,
-        role: "user", 
-        plan: "free", 
-        createdAt: new Date(),
+        role: "user",
+        plan: "free",
+        createdAt: new Date().toISOString(),
       });
+
       router.push("/LoginPage");
     } catch (err) {
       console.error(err);
-      setError("Ro‘yxatdan o‘tishda xatolik ❌");
+      if (err.code === "auth/invalid-email") {
+        setError("Email formati noto‘g‘ri.");
+      } else if (err.code === "auth/weak-password") {
+        setError("Parol juda zaif (kamida 6 ta belgi bo‘lishi kerak).");
+      } else {
+        setError("Ro‘yxatdan o‘tishda xatolik ❌");
+      }
     }
   };
 
@@ -40,14 +68,14 @@ export default function RegPage() {
           type="email"
           placeholder="Email"
           value={email}
-          onChange={e => setEmail(e.target.value)}
+          onChange={(e) => setEmail(e.target.value)}
           className="border border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 outline-none p-3 w-full mb-4 rounded-lg"
         />
         <input
           type="password"
           placeholder="Password"
           value={password}
-          onChange={e => setPassword(e.target.value)}
+          onChange={(e) => setPassword(e.target.value)}
           className="border border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 outline-none p-3 w-full mb-4 rounded-lg"
         />
         <button
@@ -56,9 +84,7 @@ export default function RegPage() {
         >
           Register
         </button>
-        {error && (
-          <p className="text-red-500 text-center mt-3">{error}</p>
-        )}
+        {error && <p className="text-red-500 text-center mt-3">{error}</p>}
         <p className="mt-6 text-sm text-center text-gray-600">
           Allaqachon akkauntingiz bormi?{" "}
           <Link href="/LoginPage" className="text-blue-600 hover:underline">
