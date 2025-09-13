@@ -7,6 +7,7 @@ import axios from "axios";
 import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import { FaStar } from "react-icons/fa";
+import WatchlistButton from "@/app/components/Watchlist";
 
 export default function MovieDetail({ token }) {
   const { id } = useParams();
@@ -25,7 +26,7 @@ export default function MovieDetail({ token }) {
           `${process.env.NEXT_PUBLIC_Project_TmdApi_Api}/movie/${id}/videos?api_key=${process.env.NEXT_PUBLIC_Project_TmdApi_Api_Key}&language=en-US`
         );
         const foundTrailer = videoRes.data.results.find(
-          vid => vid.type === "Trailer" && vid.site === "YouTube"
+          (vid) => vid.type === "Trailer" && vid.site === "YouTube"
         );
         setTrailer(foundTrailer);
       } catch (err) {
@@ -35,7 +36,12 @@ export default function MovieDetail({ token }) {
     fetchMovie();
   }, [id]);
 
-  if (!movie) return <p className="text-white p-6"><Spinder /></p>;
+  if (!movie)
+    return (
+      <p className="text-white p-6">
+        <Spinder />
+      </p>
+    );
 
   const { poster_path, title, release_date, vote_average, overview } = movie;
 
@@ -52,10 +58,12 @@ export default function MovieDetail({ token }) {
           <h1 className="text-3xl font-bold">{title}</h1>
           <p className="text-gray-600 dark:text-gray-400">{release_date}</p>
           <p className="mt-4 leading-relaxed">{overview}</p>
-          <p className="mt-4 text-yellow-500 font-semibold"><FaStar/> Rating: {vote_average} / 10</p>
+          <p className="mt-4 text-yellow-500 font-semibold">
+            <FaStar /> Rating: {vote_average} / 10
+          </p>
 
           <LikeButton movie={movie} token={token} />
-
+          <WatchlistButton movie={movie} />
           {trailer && (
             <div className="mt-6">
               <h2 className="text-xl font-semibold mb-2">🎬 Trailer</h2>
