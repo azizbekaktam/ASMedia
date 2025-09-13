@@ -1,62 +1,62 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { doc, getDoc, setDoc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
-import { db } from "@/firebase";  // sizning firebase config faylingiz
-import { useAuth } from "@/app/context/AuthContext"; // agar auth context bo‘lsa
+import { auth, db } from "../../../firebase";
+import { doc, onSnapshot, setDoc, deleteDoc } from "firebase/firestore";
+import { FaBookmark, FaRegBookmark } from "react-icons/fa";
 
 export default function WatchlistButton({ movie }) {
-  const [isInWatchlist, setIsInWatchlist] = useState(false);
-  const { user } = useAuth(); // foydalanuvchi
+  const [inWatchlist, setInWatchlist] = useState(false);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    if (!user || !movie?.id) return;
+    const unsubscribe = auth.onAuthStateChanged((currentUser) => {
+      setUser(currentUser);
+    });
+    return () => unsubscribe();
+  }, []);
 
-    const fetchWatchlist = async () => {
-      const userRef = doc(db, "users", user.uid);
-      const userSnap = await getDoc(userRef);
+  useEffect(() => {
+    if (!user) return;
 
-      if (userSnap.exists()) {
-        const data = userSnap.data();
-        const hasMovie = data.watchlist?.some((m) => m.id === movie.id);
-        setIsInWatchlist(hasMovie);
-      }
-    };
+    const ref = doc(db, "users", user.uid, "watchlist", String(movie.id));
 
-    fetchWatchlist();
-  }, [user, movie]);
+    const unsubscribe = onSnapshot(ref, (docSnap) => {
+      setInWatchlist(docSnap.exists());
+    });
+
+    return () => unsubscribe();
+  }, [user, movie.id]);
 
   const toggleWatchlist = async () => {
     if (!user) {
-      alert("Iltimos, avval login qiling");
+      alert("Avval login qiling!");
       return;
     }
 
-    const userRef = doc(db, "users", user.uid);
+    const ref = doc(db, "users", user.uid, "watchlist", String(movie.id));
 
-    if (isInWatchlist) {
-      await updateDoc(userRef, {
-        watchlist: arrayRemove(movie),
-      });
-      setIsInWatchlist(false);
+    if (inWatchlist) {
+      await deleteDoc(ref);
     } else {
-      await setDoc(
-        userRef,
-        { watchlist: arrayUnion(movie) },
-        { merge: true }
-      );
-      setIsInWatchlist(true);
+      await setDoc(ref, {
+        id: movie.id,
+        title: movie.title,
+        poster_path: movie.poster_path,
+        release_date: movie.release_date,
+      });
     }
   };
 
   return (
     <button
       onClick={toggleWatchlist}
-      className={`px-4 py-2 rounded-lg mt-4 ${
-        isInWatchlist ? "bg-red-500 text-white" : "bg-blue-500 text-white"
+      className={`px-3 py-1 rounded flex gap-2 items-center ${
+        inWatchlist ? "bg-yellow-500 text-white" : "bg-gray-200"
       }`}
     >
-      {isInWatchlist ? "❌ Olib tashlash" : "➕ Keyinroq ko‘raman"}
+      {inWatchlist ? <FaBookmark /> : <FaRegBookmark />}
+      {inWatchlist ? "Watchlisted" : "Watchlist"}
     </button>
   );
 }
