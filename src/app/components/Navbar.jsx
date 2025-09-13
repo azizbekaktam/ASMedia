@@ -83,15 +83,15 @@ export default function Navbar() {
           <div className="hidden md:block w-40 lg:w-56">
             <Search />
           </div>
-          <div className="w-10 mr-10px  h-10 rounded-full border-2 border-yellow-500 relative">
+          <div className="w-10  h-10 rounded-full border-2 border-yellow-500 relative">
             <UserProfile />
           </div>
-          <Link
+          {/* <Link
             href={"/LIkedPage"}
             className="w-9 h-9 rounded-full bg-gradient-to-r from-yellow-400 to-yellow-500 flex items-center justify-center text-black font-bold text-xs shadow-md hover:scale-110 transition-transform"
           >
             ♥
-          </Link>
+          </Link> */}
 
           {/* <LogOut /> */}
 
