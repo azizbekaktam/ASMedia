@@ -7,7 +7,7 @@ import Spinder from "@/app/components/Spinder";
 import LikeButton from "@/app/components/LikeButton";
 import { FaStar } from "react-icons/fa";
 import WatchlistButton from "@/app/components/Watchlist";
-import { db } from "@/app/firebase";
+import {  db } from "../../../../firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
 export default function CartoonDetail({ token }) {
