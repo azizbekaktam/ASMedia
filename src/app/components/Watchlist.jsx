@@ -1,27 +1,52 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { doc, getDoc, setDoc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
+import { db } from "@/firebase";  // sizning firebase config faylingiz
+import { useAuth } from "@/app/context/AuthContext"; // agar auth context bo‘lsa
 
 export default function WatchlistButton({ movie }) {
   const [isInWatchlist, setIsInWatchlist] = useState(false);
+  const { user } = useAuth(); // foydalanuvchi
 
   useEffect(() => {
-    const stored = JSON.parse(localStorage.getItem("watchlist")) || [];
-    setIsInWatchlist(stored.some(m => m.id === movie.id));
-  }, [movie.id]);
+    if (!user || !movie?.id) return;
 
-  const toggleWatchlist = () => {
-    let stored = JSON.parse(localStorage.getItem("watchlist")) || [];
+    const fetchWatchlist = async () => {
+      const userRef = doc(db, "users", user.uid);
+      const userSnap = await getDoc(userRef);
 
-    if (isInWatchlist) {
-      stored = stored.filter(m => m.id !== movie.id);
-      setIsInWatchlist(false);
-    } else {
-      stored.push(movie);
-      setIsInWatchlist(true);
+      if (userSnap.exists()) {
+        const data = userSnap.data();
+        const hasMovie = data.watchlist?.some((m) => m.id === movie.id);
+        setIsInWatchlist(hasMovie);
+      }
+    };
+
+    fetchWatchlist();
+  }, [user, movie]);
+
+  const toggleWatchlist = async () => {
+    if (!user) {
+      alert("Iltimos, avval login qiling");
+      return;
     }
 
-    localStorage.setItem("watchlist", JSON.stringify(stored));
+    const userRef = doc(db, "users", user.uid);
+
+    if (isInWatchlist) {
+      await updateDoc(userRef, {
+        watchlist: arrayRemove(movie),
+      });
+      setIsInWatchlist(false);
+    } else {
+      await setDoc(
+        userRef,
+        { watchlist: arrayUnion(movie) },
+        { merge: true }
+      );
+      setIsInWatchlist(true);
+    }
   };
 
   return (
@@ -31,7 +56,7 @@ export default function WatchlistButton({ movie }) {
         isInWatchlist ? "bg-red-500 text-white" : "bg-blue-500 text-white"
       }`}
     >
-      {isInWatchlist ? "❌ Keyinroqdan olib tashlash" : "➕ Keyinroq ko‘raman"}
+      {isInWatchlist ? "❌ Olib tashlash" : "➕ Keyinroq ko‘raman"}
     </button>
   );
 }
