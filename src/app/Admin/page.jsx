@@ -2,7 +2,14 @@
 
 import { useState, useEffect } from "react";
 import { auth, db } from "../../../firebase";
-import { collection, getDocs, updateDoc, deleteDoc, doc } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  getDoc,
+  updateDoc,
+  deleteDoc,
+  doc,
+} from "firebase/firestore";
 import { useRouter } from "next/navigation";
 
 export default function AdminPage() {
@@ -12,6 +19,7 @@ export default function AdminPage() {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("all");
   const [toast, setToast] = useState("");
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
@@ -21,26 +29,44 @@ export default function AdminPage() {
         return;
       }
 
-      const snap = await getDocs(collection(db, "users"));
-      if (!snap.empty) {
-        const currentUserData = snap.docs.find(d => d.id === currentUser.uid)?.data();
-        setUserData(currentUserData);
-        setUser(currentUser);
+      setUser(currentUser);
 
-        if (currentUserData?.role !== "admin") {
+      try {
+        // current user docni aniq olish (snap orqali whole collection qidirish yomon)
+        const curSnap = await getDoc(doc(db, "users", currentUser.uid));
+        const curData = curSnap.exists() ? curSnap.data() : null;
+        setUserData(curData);
+
+        if (!curData || curData.role !== "admin") {
           router.push("/");
-        } else {
-          fetchUsers();
+          return;
         }
+
+        await fetchUsers();
+      } catch (err) {
+        console.error("Admin check error:", err);
+        showToast("Server bilan bogʻlanishda xato");
+      } finally {
+        setLoading(false);
       }
     });
 
     return () => unsubscribe();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchUsers = async () => {
-    const querySnapshot = await getDocs(collection(db, "users"));
-    setUsers(querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
+    try {
+      setLoading(true);
+      const qSnap = await getDocs(collection(db, "users"));
+      const arr = qSnap.docs.map((d) => ({ id: d.id, ...d.data() }));
+      setUsers(arr);
+    } catch (err) {
+      console.error("Fetch users error:", err);
+      showToast("Foydalanuvchilarni yuklashda xato");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const showToast = (message) => {
@@ -49,37 +75,58 @@ export default function AdminPage() {
   };
 
   const handleRoleChange = async (id, newRole) => {
-    await updateDoc(doc(db, "users", id), { role: newRole });
-    fetchUsers();
-    showToast("Role o‘zgartirildi ✅");
-  };
-
-  const handlePlanChange = async (id, newPlan) => {
-    await updateDoc(doc(db, "users", id), { plan: newPlan });
-    fetchUsers();
-    showToast("Plan o‘zgartirildi ✅");
-  };
-
-  const handleDelete = async (id) => {
-    if (confirm("Ushbu foydalanuvchini o‘chirmoqchimisiz?")) {
-      await deleteDoc(doc(db, "users", id));
+    try {
+      // optimistic update
+      setUsers((prev) => prev.map((u) => (u.id === id ? { ...u, role: newRole } : u)));
+      await updateDoc(doc(db, "users", id), { role: newRole });
+      showToast("Role o'zgartirildi ✅");
+    } catch (err) {
+      console.error(err);
+      showToast("Role o'zgarmadi ❌");
       fetchUsers();
-      showToast("Foydalanuvchi o‘chirildi ❌");
     }
   };
 
-  // Filter & Search
+  const handlePlanChange = async (id, newPlan) => {
+    try {
+      setUsers((prev) => prev.map((u) => (u.id === id ? { ...u, plan: newPlan } : u)));
+      await updateDoc(doc(db, "users", id), { plan: newPlan });
+      showToast("Plan o'zgartirildi ✅");
+    } catch (err) {
+      console.error(err);
+      showToast("Plan o'zgarmadi ❌");
+      fetchUsers();
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (!confirm("Ushbu foydalanuvchini o‘chirmoqchimisiz?")) return;
+    try {
+      await deleteDoc(doc(db, "users", id));
+      setUsers((prev) => prev.filter((u) => u.id !== id));
+      showToast("Foydalanuvchi o‘chirildi ❌");
+    } catch (err) {
+      console.error(err);
+      showToast("O‘chirishda xato ❌");
+      fetchUsers();
+    }
+  };
+
+  // Safe filter: email/name bo'lmasa bo'sh stringga aylantirib toLowerCase chaqiramiz
+  const q = search.trim().toLowerCase();
   const filteredUsers = users
-    .filter((u) =>
-      u.email.toLowerCase().includes(search.toLowerCase()) ||
-      (u.name && u.name.toLowerCase().includes(search.toLowerCase()))
-    )
+    .filter((u) => {
+      const email = (u?.email ?? "").toLowerCase();
+      const name = (u?.name ?? "").toLowerCase();
+      // agar search bo'sh bo'lsa ham hamma keladi ('' includes => true)
+      return email.includes(q) || name.includes(q);
+    })
     .filter((u) => {
       if (filter === "all") return true;
-      if (filter === "admin") return u.role === "admin";
-      if (filter === "user") return u.role === "user";
-      if (filter === "premium") return u.plan === "premium";
-      if (filter === "free") return u.plan === "free";
+      if (filter === "admin") return u?.role === "admin";
+      if (filter === "user") return u?.role === "user";
+      if (filter === "premium") return u?.plan === "premium";
+      if (filter === "free") return (u?.plan ?? "free") === "free";
       return true;
     });
 
@@ -88,113 +135,111 @@ export default function AdminPage() {
       <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">Admin Panel 👑</h1>
 
       {toast && (
-        <div className="fixed top-5 right-5 bg-green-500 text-white px-4 py-2 rounded shadow-lg z-50 animate-fadeIn">
+        <div className="fixed top-5 right-5 bg-green-500 text-white px-4 py-2 rounded shadow-lg z-50">
           {toast}
         </div>
       )}
 
-      <div className="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <input
-          type="text"
-          placeholder="Foydalanuvchi qidirish (ism/email)"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="w-full md:w-1/2 p-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-yellow-400 focus:outline-none"
-        />
-
-        <div className="flex flex-wrap gap-2">
-          <button
-            onClick={() => setFilter("all")}
-            className={`px-4 py-2 rounded-lg text-sm font-medium ${filter === "all" ? "bg-yellow-400 text-black" : "bg-gray-200"}`}
-          >
-            Barchasi
-          </button>
-          <button
-            onClick={() => setFilter("admin")}
-            className={`px-4 py-2 rounded-lg text-sm font-medium ${filter === "admin" ? "bg-yellow-400 text-black" : "bg-gray-200"}`}
-          >
-            Adminlar
-          </button>
-          <button
-            onClick={() => setFilter("user")}
-            className={`px-4 py-2 rounded-lg text-sm font-medium ${filter === "user" ? "bg-yellow-400 text-black" : "bg-gray-200"}`}
-          >
-            Userlar
-          </button>
-          <button
-            onClick={() => setFilter("premium")}
-            className={`px-4 py-2 rounded-lg text-sm font-medium ${filter === "premium" ? "bg-yellow-400 text-black" : "bg-gray-200"}`}
-          >
-            Premium
-          </button>
-          <button
-            onClick={() => setFilter("free")}
-            className={`px-4 py-2 rounded-lg text-sm font-medium ${filter === "free" ? "bg-yellow-400 text-black" : "bg-gray-200"}`}
-          >
-            Free
-          </button>
+      {/* Loading */}
+      {loading ? (
+        <div className="flex items-center justify-center py-24">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-500" />
         </div>
-      </div>
+      ) : (
+        <>
+          {/* Search & Filters */}
+          <div className="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <input
+              type="text"
+              placeholder="Foydalanuvchi qidirish (ism/email)"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full md:w-1/2 p-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-yellow-400 focus:outline-none"
+            />
 
-      <div className="overflow-x-auto">
-        <table className="w-full bg-white shadow-md rounded-lg overflow-hidden">
-          <thead className="bg-yellow-400 text-black text-left">
-            <tr>
-              <th className="p-3">#</th>
-              <th className="p-3">Name</th>
-              <th className="p-3">Email</th>
-              <th className="p-3">Role</th>
-              <th className="p-3">Plan</th>
-              <th className="p-3 text-center">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredUsers.length > 0 ? (
-              filteredUsers.map((u, i) => (
-                <tr key={u.id} className="border-b hover:bg-gray-50">
-                  <td className="p-3">{i + 1}</td>
-                  <td className="p-3">{u.name || u.email.split("@")[0]}</td>
-                  <td className="p-3">{u.email}</td>
-                  <td className="p-3">
-                    <select
-                      value={u.role}
-                      onChange={(e) => handleRoleChange(u.id, e.target.value)}
-                      className="p-1 rounded border border-gray-300"
-                    >
-                      <option value="user">User</option>
-                      <option value="admin">Admin</option>
-                    </select>
-                  </td>
-                  <td className="p-3">
-                    <select
-                      value={u.plan}
-                      onChange={(e) => handlePlanChange(u.id, e.target.value)}
-                      className="p-1 rounded border border-gray-300"
-                    >
-                      <option value="free">Free</option>
-                      <option value="premium">Premium</option>
-                    </select>
-                  </td>
-                  <td className="p-3 text-center">
-                    <button
-                      onClick={() => handleDelete(u.id)}
-                      className="bg-red-500 hover:bg-red-600 text-white px-4 py-1 rounded transition"
-                    >
-                      Delete
-                    </button>
-                  </td>
+            <div className="flex flex-wrap gap-2">
+              {[
+                { key: "all", label: "Barchasi" },
+                { key: "admin", label: "Adminlar" },
+                { key: "user", label: "Userlar" },
+                { key: "premium", label: "Premium" },
+                { key: "free", label: "Free" },
+              ].map((f) => (
+                <button
+                  key={f.key}
+                  onClick={() => setFilter(f.key)}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium ${
+                    filter === f.key ? "bg-yellow-400 text-black" : "bg-gray-200"
+                  }`}
+                >
+                  {f.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Table */}
+          <div className="overflow-x-auto">
+            <table className="w-full bg-white shadow-md rounded-lg overflow-hidden">
+              <thead className="bg-yellow-400 text-black text-left">
+                <tr>
+                  <th className="p-3">#</th>
+                  <th className="p-3">Name</th>
+                  <th className="p-3">Email</th>
+                  <th className="p-3">Role</th>
+                  <th className="p-3">Plan</th>
+                  <th className="p-3 text-center">Actions</th>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="6" className="p-4 text-center text-gray-500">
-                  Hech qanday foydalanuvchi topilmadi
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+              </thead>
+              <tbody>
+                {filteredUsers.length > 0 ? (
+                  filteredUsers.map((u, i) => (
+                    <tr key={u.id} className="border-b hover:bg-gray-50">
+                      <td className="p-3">{i + 1}</td>
+                      <td className="p-3">{u?.name || (u?.email || "").split("@")[0]}</td>
+                      <td className="p-3">{u?.email || "—"}</td>
+                      <td className="p-3">
+                        <select
+                          value={u?.role ?? "user"}
+                          onChange={(e) => handleRoleChange(u.id, e.target.value)}
+                          className="p-1 rounded border border-gray-300"
+                        >
+                          <option value="user">User</option>
+                          <option value="admin">Admin</option>
+                        </select>
+                      </td>
+                      <td className="p-3">
+                        <select
+                          value={u?.plan ?? "free"}
+                          onChange={(e) => handlePlanChange(u.id, e.target.value)}
+                          className="p-1 rounded border border-gray-300"
+                        >
+                          <option value="free">Free</option>
+                          <option value="premium">Premium</option>
+                        </select>
+                      </td>
+                      <td className="p-3 text-center">
+                        <button
+                          onClick={() => handleDelete(u.id)}
+                          className="bg-red-500 hover:bg-red-600 text-white px-4 py-1 rounded transition"
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="6" className="p-4 text-center text-gray-500">
+                      Hech qanday foydalanuvchi topilmadi
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </>
+      )}
     </div>
   );
 }

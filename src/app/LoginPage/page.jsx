@@ -21,21 +21,18 @@ export default function LoginPage() {
       );
       const user = userCredential.user;
 
-      // 🔑 Firebase token olish
       const token = await user.getIdToken();
 
-      // LocalStorage ga saqlash
       localStorage.setItem("token", token);
 
-      // 🔍 Firestore’dan role olib kelish
       const userRef = doc(db, "users", user.uid);
       const userSnap = await getDoc(userRef);
 
       if (userSnap.exists()) {
         const userData = userSnap.data();
-        localStorage.setItem("role", userData.role || "user"); // "admin" yoki "user"
+        localStorage.setItem("role", userData.role || "user"); 
       } else {
-        localStorage.setItem("role", "user"); // default
+        localStorage.setItem("role", "user"); 
       }
 
       router.push("/Movies");

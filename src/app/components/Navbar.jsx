@@ -47,7 +47,9 @@ export default function Navbar() {
             <Link key={item.name} href={item.href} className="relative group">
               <li
                 className={`cursor-pointer transition-colors ${
-                  pathname === item.href ? "text-yellow-400 font-bold" : "hover:text-yellow-500"
+                  pathname === item.href
+                    ? "text-yellow-400 font-bold"
+                    : "hover:text-yellow-500"
                 }`}
               >
                 {item.name}
@@ -60,7 +62,9 @@ export default function Navbar() {
             <Link href="/Admin" className="relative group">
               <li
                 className={`cursor-pointer transition-colors ${
-                  pathname === "/Admin" ? "text-yellow-400 font-bold" : "hover:text-yellow-500"
+                  pathname === "/Admin"
+                    ? "text-yellow-400 font-bold"
+                    : "hover:text-yellow-500"
                 }`}
               >
                 Admin
@@ -73,17 +77,15 @@ export default function Navbar() {
             <Bell className="w-5 h-5 cursor-pointer hover:text-yellow-500 transition-colors" />
             <span className="absolute -top-2 -right-2 w-2 h-2 bg-red-500 rounded-full"></span>
           </li>
-
-          <div className="w-10 h-10 rounded-full border-2 border-yellow-500 relative">
-            <UserProfile />
-          </div>
         </ul>
 
         <div className="flex items-center gap-4">
           <div className="hidden md:block w-40 lg:w-56">
             <Search />
           </div>
-
+          <div className="w-10 mr-10px  h-10 rounded-full border-2 border-yellow-500 relative">
+            <UserProfile />
+          </div>
           <Link
             href={"/LIkedPage"}
             className="w-9 h-9 rounded-full bg-gradient-to-r from-yellow-400 to-yellow-500 flex items-center justify-center text-black font-bold text-xs shadow-md hover:scale-110 transition-transform"
@@ -93,7 +95,10 @@ export default function Navbar() {
 
           {/* <LogOut /> */}
 
-          <button onClick={() => setIsOpen(!isOpen)} className="md:hidden text-white">
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="md:hidden text-white"
+          >
             {isOpen ? <X size={26} /> : <Menu size={26} />}
           </button>
         </div>
@@ -103,13 +108,17 @@ export default function Navbar() {
         <div className="md:hidden bg-gray-900 shadow-md px-6 py-4 space-y-4 text-white">
           <Search />
           {navItems.map((item) => (
-            <Link key={item.name} href={item.href} className="block hover:text-yellow-500">
+            <Link
+              key={item.name}
+              href={item.href}
+              className="block hover:text-yellow-500"
+            >
               {item.name}
             </Link>
           ))}
           {userRole === "admin" && (
             <Link href="/Admin" className="block hover:text-yellow-500">
-              Admin
+              Admin page
             </Link>
           )}
         </div>
