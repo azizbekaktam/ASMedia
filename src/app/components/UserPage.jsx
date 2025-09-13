@@ -4,12 +4,14 @@ import { useState, useEffect, useRef } from "react";
 import { auth, db } from "../../../firebase";
 import { doc, getDoc } from "firebase/firestore";
 import LogOut from "./LogOut";
+import { useRouter } from "next/navigation";
 
 export default function UserProfile() {
   const [user, setUser] = useState(null);
   const [userData, setUserData] = useState(null);
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
+  const router = useRouter();
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (currentUser) => {
@@ -123,13 +125,22 @@ export default function UserProfile() {
           <div className="flex gap-3">
             <button
               onClick={() => {
-                // example: go to profile page or settings
                 setOpen(false);
-                // router.push("/profile") // import/use router if needed
+                router.push("/profile");
               }}
               className="flex-1 px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 hover:scale-105 transition"
             >
               Profile
+            </button>
+
+            <button
+              onClick={() => {
+                setOpen(false);
+                router.push("/history");
+              }}
+              className="flex-1 px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 hover:scale-105 transition"
+            >
+              History
             </button>
 
             <div className="flex-1">

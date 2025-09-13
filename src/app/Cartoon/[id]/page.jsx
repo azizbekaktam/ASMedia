@@ -7,12 +7,15 @@ import Spinder from "@/app/components/Spinder";
 import LikeButton from "@/app/components/LikeButton";
 import { FaStar } from "react-icons/fa";
 import WatchlistButton from "@/app/components/Watchlist";
+import { db } from "@/app/firebase";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
 export default function CartoonDetail({ token }) {
   const { id } = useParams();
   const [cartoon, setCartoon] = useState([]);
   const [trailerKey, setTrailerKey] = useState(null);
 
+  // 🔹 Cartoon va Trailer fetch
   useEffect(() => {
     async function fetchCartoon() {
       try {
@@ -21,6 +24,18 @@ export default function CartoonDetail({ token }) {
         );
         const data = await res.json();
         setCartoon({ ...data, type: "multfilm" });
+
+        // 🔹 Firestore-ga "history" sifatida saqlash
+        if (token && data) {
+          const historyRef = collection(db, "users", token, "history");
+          await addDoc(historyRef, {
+            movieId: id,
+            title: data.title,
+            poster: data.poster_path,
+            type: "multfilm",
+            watchedAt: serverTimestamp(),
+          });
+        }
       } catch (error) {
         console.error("Error fetching cartoon:", error);
       }
@@ -45,7 +60,7 @@ export default function CartoonDetail({ token }) {
       fetchCartoon();
       fetchTrailer();
     }
-  }, [id]);
+  }, [id, token]);
 
   if (!cartoon)
     return (

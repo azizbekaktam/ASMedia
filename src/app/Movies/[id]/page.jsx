@@ -3,25 +3,53 @@
 import BackButton from "@/app/components/BackButton";
 import Spinder from "@/app/components/Spinder";
 import LikeButton from "@/app/components/LikeButton";
+import WatchlistButton from "@/app/components/Watchlist";
 import axios from "axios";
 import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import { FaStar } from "react-icons/fa";
-import WatchlistButton from "@/app/components/Watchlist";
+
+// 🔥 Firebase
+import { auth, db } from "../../../firebase";
+import { doc, setDoc } from "firebase/firestore";
 
 export default function MovieDetail({ token }) {
   const { id } = useParams();
-  const [movie, setMovie] = useState([]);
+  const [movie, setMovie] = useState(null);
   const [trailer, setTrailer] = useState(null);
+  const [user, setUser] = useState(null);
 
+  // 👤 Userni olish
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((currentUser) => {
+      setUser(currentUser);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  // 🎬 Movie fetch + History-ga yozish
   useEffect(() => {
     const fetchMovie = async () => {
       try {
         const movieRes = await axios.get(
           `${process.env.NEXT_PUBLIC_Project_TmdApi_Api}/movie/${id}?api_key=${process.env.NEXT_PUBLIC_Project_TmdApi_Api_Key}&language=en-US`
         );
-        setMovie({ ...movieRes.data, type: "movie" });
+        const movieData = { ...movieRes.data, type: "movie" };
+        setMovie(movieData);
 
+        // History-ga yozish
+        if (user) {
+          const ref = doc(db, "users", user.uid, "history", String(movieData.id));
+          await setDoc(ref, {
+            id: movieData.id,
+            title: movieData.title,
+            poster_path: movieData.poster_path,
+            release_date: movieData.release_date,
+            viewedAt: new Date().toISOString(),
+          });
+        }
+
+        // Trailer fetch
         const videoRes = await axios.get(
           `${process.env.NEXT_PUBLIC_Project_TmdApi_Api}/movie/${id}/videos?api_key=${process.env.NEXT_PUBLIC_Project_TmdApi_Api_Key}&language=en-US`
         );
@@ -33,8 +61,9 @@ export default function MovieDetail({ token }) {
         console.error("API xatolik:", err);
       }
     };
-    fetchMovie();
-  }, [id]);
+
+    if (id) fetchMovie();
+  }, [id, user]);
 
   if (!movie)
     return (
@@ -58,12 +87,14 @@ export default function MovieDetail({ token }) {
           <h1 className="text-3xl font-bold">{title}</h1>
           <p className="text-gray-600 dark:text-gray-400">{release_date}</p>
           <p className="mt-4 leading-relaxed">{overview}</p>
-          <p className="mt-4 text-yellow-500 font-semibold">
+          <p className="mt-4 text-yellow-500 font-semibold flex items-center gap-2">
             <FaStar /> Rating: {vote_average} / 10
           </p>
 
+          {/* 🔘 Tugmalar */}
           <LikeButton movie={movie} token={token} />
           <WatchlistButton movie={movie} />
+
           {trailer && (
             <div className="mt-6">
               <h2 className="text-xl font-semibold mb-2">🎬 Trailer</h2>
